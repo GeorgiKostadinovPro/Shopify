@@ -2,6 +2,7 @@ package models.products;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public abstract class Product implements models.products.contracts.Product {
     private int id;
@@ -75,4 +76,20 @@ public abstract class Product implements models.products.contracts.Product {
     }
 
     public abstract BigDecimal calculateTotalPrice();
+
+    @Override
+    public String toString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("--- Product Information ---\n");
+        sb.append("Product ID: " + this.id + "\n");
+        sb.append("Name: " + this.name + "\n");
+        sb.append("Category: " + this.getClass().getSimpleName() + "\n");
+        sb.append("Delivery Price: $" + this.deliveryPrice + "\n");
+        sb.append("Expiration Date: " + this.expirationDate.format(formatter) + "\n");
+
+        return sb.toString().trim();
+    }
 }

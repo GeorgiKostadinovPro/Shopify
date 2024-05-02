@@ -1,7 +1,7 @@
 package models.products;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 public class FoodProduct extends Product {
@@ -55,24 +55,40 @@ public class FoodProduct extends Product {
             throw new IllegalStateException("The product has already expired.");
         }
 
-        LocalDate currentDate = LocalDate.now();
-
-        // deliveryPrice: 50, markUpPer: 5% => totalPrice = 50 * (1 + (5 / 100)) = 50 * 1.05 = 52.5
-        // expirationDiscount: 5% => 52.5 * (1 - (5 / 100)) = 52.5 * 0.95 = 49.875
-        // totalPrice => 49.875
-
         BigDecimal valueToMultiplyPrice = BigDecimal.ONE.add(
-                this.markupPercentage.divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP)
+                this.markupPercentage.divide(BigDecimal.valueOf(100))
         );
 
-        if (super.getExpirationDate().minusDays(this.approachingExpirationDays).isBefore(currentDate)) {
+        if (this.checkForExpirationDiscount()) {
             BigDecimal discount = BigDecimal.ONE.subtract(
-                    this.approachingExpirationDiscount.divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP)
+                    this.approachingExpirationDiscount.divide(BigDecimal.valueOf(100))
             );
 
             return super.getDeliveryPrice().multiply(valueToMultiplyPrice).multiply(discount);
         }
 
         return super.getDeliveryPrice().multiply(valueToMultiplyPrice);
+    }
+
+    private boolean checkForExpirationDiscount() {
+        LocalDate currentDate = LocalDate.now();
+
+        return super.getExpirationDate().minusDays(this.approachingExpirationDays).isBefore(currentDate);
+    }
+
+    @Override
+    public String toString() {
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(super.toString());
+        sb.append("\n --- More Information --- \n");
+        sb.append("Markup Percentage: ").append(this.markupPercentage).append("%\n");
+        sb.append("Expiration Discount: ").append(this.approachingExpirationDiscount).append("%\n");
+        sb.append("Is Discount Applied: ").append(this.checkForExpirationDiscount()).append("\n");
+        sb.append("Total Price: $").append(df.format(this.calculateTotalPrice())).append("\n");
+
+        return sb.toString().trim();
     }
 }
