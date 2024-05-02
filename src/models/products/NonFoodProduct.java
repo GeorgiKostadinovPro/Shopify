@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 
-public class FoodProduct extends Product {
+public class NonFoodProduct extends Product {
     private BigDecimal markupPercentage;
     private int approachingExpirationDays;
     private BigDecimal approachingExpirationDiscount;
 
-    public FoodProduct(
+    public NonFoodProduct(
             int _id,
             String _name,
             BigDecimal _deliveryPrice,
