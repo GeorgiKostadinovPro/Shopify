@@ -1,4 +1,3 @@
-
 import models.cashiers.Cashier;
 import models.products.FoodProduct;
 import models.products.NonFoodProduct;
@@ -11,6 +10,7 @@ public class Main {
         NonFoodProduct p1 = new NonFoodProduct(
                 1,
                 "Smasung S22",
+                100,
                 BigDecimal.valueOf(1000),
                 LocalDate.ofYearDay(2025, 4),
                 BigDecimal.valueOf(5),
@@ -21,6 +21,7 @@ public class Main {
 
         FoodProduct p2 = new FoodProduct(1,
                 "Smasung S22+",
+                100,
                 BigDecimal.valueOf(1000),
                 LocalDate.ofYearDay(2024, 126),
                 BigDecimal.valueOf(5),
