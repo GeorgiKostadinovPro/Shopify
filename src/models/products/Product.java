@@ -65,6 +65,8 @@ public abstract class Product implements models.products.contracts.Product {
         if (_quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than 0.");
         }
+
+        this.quantity = _quantity;
     }
 
     private void setDeliveryPrice(BigDecimal _deliveryPrice) {
