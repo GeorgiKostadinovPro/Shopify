@@ -12,13 +12,14 @@ public class FoodProduct extends Product {
     public FoodProduct(
             int _id,
             String _name,
+            int _quantity,
             BigDecimal _deliveryPrice,
             LocalDate _expirationDate,
             BigDecimal _markupPercentage,
             int _approachingExpirationDays,
             BigDecimal _approachingExpirationDiscount)
     {
-        super(_id, _name, _deliveryPrice, _expirationDate);
+        super(_id, _name, _quantity, _deliveryPrice, _expirationDate);
 
         setMarkupPercentage(_markupPercentage);
         setApproachingExpirationDays(_approachingExpirationDays);

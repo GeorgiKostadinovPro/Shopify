@@ -7,17 +7,20 @@ import java.time.format.DateTimeFormatter;
 public abstract class Product implements models.products.contracts.Product {
     private int id;
     private String name;
+    private int quantity;
     private BigDecimal deliveryPrice;
     private LocalDate expirationDate;
 
     protected Product(
             int _id,
             String _name,
+            int _quantity,
             BigDecimal _deliveryPrice,
             LocalDate _expirationDate)
     {
         setId(_id);
         setName(_name);
+        setQuantity(_quantity);
         setDeliveryPrice(_deliveryPrice);
         setExpirationDate(_expirationDate);
     }
@@ -28,6 +31,10 @@ public abstract class Product implements models.products.contracts.Product {
 
     public String getName() {
         return this.name;
+    }
+
+    public int getQuantity() {
+        return this.quantity;
     }
 
     public BigDecimal getDeliveryPrice() {
@@ -47,16 +54,28 @@ public abstract class Product implements models.products.contracts.Product {
     }
 
     private void setName(String _name) {
-        if (_name.isEmpty()) {
+        if (_name == null || _name.isEmpty()) {
             throw new IllegalArgumentException("Name must NOT be empty.");
         }
 
         this.name = _name;
     }
 
+    public void setQuantity(int _quantity) {
+        if (_quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than 0.");
+        }
+
+        if (this.quantity > 0 && this.quantity - _quantity < 0) {
+            throw new IllegalArgumentException("Amount too big. Cannot reduce the base quantity.");
+        }
+
+        this.quantity = _quantity;
+    }
+
     private void setDeliveryPrice(BigDecimal _deliveryPrice) {
-        if (_deliveryPrice.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Unit delivery price must be greater than zero.");
+        if (_deliveryPrice == null || _deliveryPrice.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Delivery price must be greater than zero.");
         }
 
         this.deliveryPrice = _deliveryPrice;

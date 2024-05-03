@@ -6,8 +6,10 @@ import java.time.LocalDate;
 public interface Product {
     int getId();
     String getName();
+    int getQuantity();
     BigDecimal getDeliveryPrice();
-    BigDecimal calculateTotalPrice();
     LocalDate getExpirationDate();
+    void setQuantity(int _quantity);
+    BigDecimal calculateTotalPrice();
     boolean isExpired();
 }
