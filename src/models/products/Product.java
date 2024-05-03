@@ -47,7 +47,7 @@ public abstract class Product implements models.products.contracts.Product {
     }
 
     private void setName(String _name) {
-        if (_name.isEmpty()) {
+        if (_name == null || _name.isEmpty()) {
             throw new IllegalArgumentException("Name must NOT be empty.");
         }
 
@@ -55,8 +55,8 @@ public abstract class Product implements models.products.contracts.Product {
     }
 
     private void setDeliveryPrice(BigDecimal _deliveryPrice) {
-        if (_deliveryPrice.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Unit delivery price must be greater than zero.");
+        if (_deliveryPrice == null || _deliveryPrice.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Delivery price must be greater than zero.");
         }
 
         this.deliveryPrice = _deliveryPrice;

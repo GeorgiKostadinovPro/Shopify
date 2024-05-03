@@ -7,7 +7,7 @@ public interface Product {
     int getId();
     String getName();
     BigDecimal getDeliveryPrice();
-    BigDecimal calculateTotalPrice();
     LocalDate getExpirationDate();
+    BigDecimal calculateTotalPrice();
     boolean isExpired();
 }

@@ -1,0 +1,56 @@
+package models.cashiers;
+
+import java.math.BigDecimal;
+
+public class Cashier implements models.cashiers.contracts.Cashier {
+    private int id;
+    private String name;
+    private BigDecimal monthlySalary;
+
+    public Cashier(int _id, String _name, BigDecimal _monthlySalary) {
+        setId(_id);
+        setName(_name);
+        setMonthlySalary(_monthlySalary);
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public BigDecimal getMonthlySalary() {
+        return this.monthlySalary;
+    }
+
+    private void setId(int _id) {
+        if (_id <= 0) {
+            throw new IllegalArgumentException("Id must be greater than 0.");
+        }
+
+        this.id = _id;
+    }
+
+    private void setName(String _name) {
+        if (_name == null || _name.isEmpty()) {
+            throw new IllegalArgumentException("Name must NOT be empty.");
+        }
+
+        this.name = _name;
+    }
+
+    public void setMonthlySalary(BigDecimal _monthlySalary) {
+        if (_monthlySalary == null || _monthlySalary.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Monthly salary must be greater than zero.");
+        }
+
+        this.monthlySalary = _monthlySalary;
+    }
+
+    @Override
+    public String toString() {
+        return "Cashier: " + this.name + " (ID: " + this.id + ") has monthly salary: $" + this.monthlySalary + "\n";
+    }
+}

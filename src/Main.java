@@ -1,3 +1,5 @@
+
+import models.cashiers.Cashier;
 import models.products.FoodProduct;
 import models.products.NonFoodProduct;
 
@@ -26,5 +28,9 @@ public class Main {
                 BigDecimal.valueOf(5));
 
         System.out.println(p2);
+
+        Cashier c1 = new Cashier(1, "Georgi", BigDecimal.valueOf(2500));
+
+        System.out.println(c1);
     }
 }
