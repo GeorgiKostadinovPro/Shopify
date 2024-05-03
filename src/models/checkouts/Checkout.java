@@ -27,6 +27,7 @@ public class Checkout implements models.checkouts.contracts.Checkout {
         this.id = _id;
     }
 
+    // TO DO: Add Client and Cart classes and refactor processPurchase(Cashier cashier, Client client)
     public void processPurchase(Cashier cashier, Product product, int quantity, BigDecimal paymentAmount) {
         BigDecimal totalPrice = product.calculateTotalPrice().multiply(BigDecimal.valueOf(quantity));
 
@@ -43,7 +44,6 @@ public class Checkout implements models.checkouts.contracts.Checkout {
             throw new InsufficientPaymentException("Insufficient payment for the purchase.");
         }
 
-        // Update product quantity after successful purchase
-        //product.setQuantity(product.getQuantity() - quantity);
+        product.setQuantity(product.getQuantity() - quantity);
     }
 }

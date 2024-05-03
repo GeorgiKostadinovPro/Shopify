@@ -9,6 +9,7 @@ public interface Product {
     int getQuantity();
     BigDecimal getDeliveryPrice();
     LocalDate getExpirationDate();
+    void setQuantity(int _quantity);
     BigDecimal calculateTotalPrice();
     boolean isExpired();
 }
