@@ -29,22 +29,6 @@ public abstract class Product implements models.products.contracts.Product {
         return this.id;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public int getQuantity() {
-        return this.quantity;
-    }
-
-    public BigDecimal getDeliveryPrice() {
-        return this.deliveryPrice;
-    }
-
-    public LocalDate getExpirationDate() {
-        return this.expirationDate;
-    }
-
     private void setId(int _id) {
         if (_id <= 0) {
             throw new IllegalArgumentException("Id must be greater than 0.");
@@ -53,12 +37,20 @@ public abstract class Product implements models.products.contracts.Product {
         this.id = _id;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     private void setName(String _name) {
         if (_name == null || _name.isEmpty()) {
             throw new IllegalArgumentException("Name must NOT be empty.");
         }
 
         this.name = _name;
+    }
+
+    public int getQuantity() {
+        return this.quantity;
     }
 
     public void setQuantity(int _quantity) {
@@ -73,12 +65,20 @@ public abstract class Product implements models.products.contracts.Product {
         this.quantity = _quantity;
     }
 
+    public BigDecimal getDeliveryPrice() {
+        return this.deliveryPrice;
+    }
+
     private void setDeliveryPrice(BigDecimal _deliveryPrice) {
         if (_deliveryPrice == null || _deliveryPrice.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Delivery price must be greater than zero.");
         }
 
         this.deliveryPrice = _deliveryPrice;
+    }
+
+    public LocalDate getExpirationDate() {
+        return this.expirationDate;
     }
 
     private void setExpirationDate(LocalDate _expirationDate) {
