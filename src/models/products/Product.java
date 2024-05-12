@@ -1,6 +1,7 @@
 package models.products;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -98,6 +99,7 @@ public abstract class Product implements models.products.contracts.Product {
 
     @Override
     public String toString() {
+        DecimalFormat df = new DecimalFormat("#,##0.00");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         StringBuilder sb = new StringBuilder();
@@ -106,7 +108,8 @@ public abstract class Product implements models.products.contracts.Product {
         sb.append("Product ID: " + this.id + "\n");
         sb.append("Name: " + this.name + "\n");
         sb.append("Category: " + this.getClass().getSimpleName() + "\n");
-        sb.append("Delivery Price: $" + this.deliveryPrice + "\n");
+        sb.append("Quantity: " + this.quantity + "\n");
+        sb.append("Delivery Price: $" + df.format(this.deliveryPrice) + "\n");
         sb.append("Expiration Date: " + this.expirationDate.format(formatter) + "\n");
 
         return sb.toString().trim();

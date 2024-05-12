@@ -1,15 +1,20 @@
 package models.carts;
 
+import models.products.contracts.Product;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
 public class CartItem {
     private int id;
     private int cartId;
-    private int productId;
+    private Product product;
     private int quantity;
 
-    public CartItem(int _id, int _cartId, int _productId, int _quantity) {
+    public CartItem(int _id, int _cartId, Product _product, int _quantity) {
         setId(_id);
         setCartId(_cartId);
-        setProductId(_productId);
+        setProduct(_product);
         setQuantity(_quantity);
     }
 
@@ -37,16 +42,16 @@ public class CartItem {
         this.cartId = _cartId;
     }
 
-    public int getProductId() {
-        return this.productId;
+    public Product getProduct() {
+        return this.product;
     }
 
-    public void setProductId(int _productId) {
-        if (_productId <= 0) {
-            throw new IllegalArgumentException("ProductId must be greater than 0.");
+    public void setProduct(Product _product) {
+        if (_product == null) {
+            throw new IllegalArgumentException("Product must be existing!");
         }
 
-        this.productId = _productId;
+        this.product = _product;
     }
 
     public int getQuantity() {
@@ -59,5 +64,19 @@ public class CartItem {
         }
 
         this.quantity = _quantity;
+    }
+
+    public BigDecimal getItemPrice() {
+        return this.product.calculateTotalPrice()
+                .multiply(BigDecimal.valueOf(this.getQuantity()));
+    }
+
+    @Override
+    public String toString() {
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+
+        return "ItemId: " + this.id + " -> Product: "
+                + this.product.getName() + " | Quantity: "
+                + this.quantity + " | Total Price: " + df.format(getItemPrice());
     }
 }
