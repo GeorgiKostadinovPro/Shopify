@@ -17,14 +17,6 @@ public class Cashier implements models.cashiers.contracts.Cashier {
         return this.id;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public BigDecimal getMonthlySalary() {
-        return this.monthlySalary;
-    }
-
     private void setId(int _id) {
         if (_id <= 0) {
             throw new IllegalArgumentException("Id must be greater than 0.");
@@ -33,12 +25,20 @@ public class Cashier implements models.cashiers.contracts.Cashier {
         this.id = _id;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     private void setName(String _name) {
         if (_name == null || _name.isEmpty()) {
             throw new IllegalArgumentException("Name must NOT be empty.");
         }
 
         this.name = _name;
+    }
+
+    public BigDecimal getMonthlySalary() {
+        return this.monthlySalary;
     }
 
     public void setMonthlySalary(BigDecimal _monthlySalary) {
