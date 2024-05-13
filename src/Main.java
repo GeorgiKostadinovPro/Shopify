@@ -1,5 +1,5 @@
 import models.carts.Cart;
-import models.cashiers.Cashier;
+import models.clients.contracts.Client;
 import models.products.FoodProduct;
 import models.products.NonFoodProduct;
 
@@ -34,6 +34,8 @@ public class Main {
 
         System.out.println(c1);
 
-        System.out.println(p1);
+        Client client = new models.clients.Client(1, "George", BigDecimal.valueOf(100));
+
+        System.out.println(client);
     }
 }
