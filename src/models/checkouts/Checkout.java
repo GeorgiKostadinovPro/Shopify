@@ -44,6 +44,6 @@ public class Checkout implements models.checkouts.contracts.Checkout {
             throw new InsufficientPaymentException("Insufficient payment for the purchase.");
         }
 
-        product.setQuantity(product.getQuantity() - quantity);
+        //product.setQuantity(product.getQuantity() - quantity);
     }
 }
