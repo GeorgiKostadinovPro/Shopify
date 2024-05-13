@@ -54,16 +54,32 @@ public abstract class Product implements models.products.contracts.Product {
         return this.quantity;
     }
 
-    public void setQuantity(int _quantity) {
+    private void setQuantity(int _quantity) {
         if (_quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than 0.");
         }
 
-        if (this.quantity > 0 && this.quantity - _quantity < 0) {
+        this.quantity = _quantity;
+    }
+
+    public void increaseQuantity(int _quantity) {
+        if (_quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than 0.");
+        }
+
+        this.quantity += _quantity;
+    }
+
+    public void decreaseQuantity(int _quantity) {
+        if (_quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than 0.");
+        }
+
+        if (this.quantity - _quantity < 0) {
             throw new IllegalArgumentException("Amount too big. Cannot reduce the base quantity.");
         }
 
-        this.quantity = _quantity;
+        this.quantity -= _quantity;
     }
 
     public BigDecimal getDeliveryPrice() {

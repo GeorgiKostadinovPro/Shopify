@@ -7,9 +7,10 @@ public interface Product {
     int getId();
     String getName();
     int getQuantity();
+    void increaseQuantity(int quantity);
+    void decreaseQuantity(int quantity);
     BigDecimal getDeliveryPrice();
     LocalDate getExpirationDate();
-    void setQuantity(int _quantity);
     BigDecimal calculateTotalPrice();
     boolean isExpired();
 }

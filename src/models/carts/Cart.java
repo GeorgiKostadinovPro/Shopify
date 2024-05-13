@@ -48,6 +48,8 @@ public class Cart {
                                     ", Required quantity: " + (desiredQuantity - product.getQuantity()));
         }
 
+        product.decreaseQuantity(desiredQuantity);
+
         CartItem cartItem;
 
         if (!cartItems.containsKey(productId)) {
@@ -60,8 +62,6 @@ public class Cart {
         }
 
         this.totalPrice = this.totalPrice.add(cartItem.getItemPrice());
-
-        product.setQuantity(product.getQuantity() - desiredQuantity);
     }
 
     public void removeProduct(Product product) {
@@ -77,7 +77,7 @@ public class Cart {
 
         this.totalPrice = this.totalPrice.subtract(cartItem.getItemPrice());
 
-        product.setQuantity(product.getQuantity() + cartItem.getQuantity());
+        product.increaseQuantity(cartItem.getQuantity());
     }
 
     public Map<Integer, CartItem> getCartItems() {
