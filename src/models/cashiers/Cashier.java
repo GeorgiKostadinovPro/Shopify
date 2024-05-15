@@ -1,5 +1,7 @@
 package models.cashiers;
 
+import utilities.DecimalFormatter;
+
 import java.math.BigDecimal;
 
 public class Cashier implements models.cashiers.contracts.Cashier {
@@ -51,6 +53,6 @@ public class Cashier implements models.cashiers.contracts.Cashier {
 
     @Override
     public String toString() {
-        return "Cashier: " + this.name + " (ID: " + this.id + ") has monthly salary: $" + this.monthlySalary + "\n";
+        return "Cashier: " + this.name + " (ID: " + this.id + ") has monthly salary: $" + DecimalFormatter.format(this.monthlySalary) + "\n";
     }
 }

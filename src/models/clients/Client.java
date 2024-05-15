@@ -2,8 +2,9 @@ package models.clients;
 
 import common.exceptions.InsufficientPaymentException;
 import models.carts.Cart;
+import utilities.DecimalFormatter;
+
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 
 public class Client implements models.clients.contracts.Client {
     private int id;
@@ -69,8 +70,6 @@ public class Client implements models.clients.contracts.Client {
 
     @Override
     public String toString() {
-        DecimalFormat df = new DecimalFormat("#,##0.00");
-
-        return "Client [id: " + this.id + ", name: " + this.name + ", budget: $" + df.format(this.budget) + "]";
+        return "Client [id: " + this.id + ", name: " + this.name + ", budget: $" + DecimalFormatter.format(this.budget) + "]";
     }
 }
