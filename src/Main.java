@@ -27,15 +27,11 @@ public class Main {
                 10,
                 BigDecimal.valueOf(5));
 
-        Cart c1 = new Cart(1);
-
-        c1.addProduct(p1, 10);
-        c1.addProduct(p2, 20);
-
-        System.out.println(c1);
-
         Client client = new models.clients.Client(1, "George", BigDecimal.valueOf(100));
 
-        System.out.println(client);
+        client.getCart().addProduct(p1, 10);
+        client.getCart().addProduct(p2, 20);
+
+        System.out.println(client.getCart().toString());
     }
 }

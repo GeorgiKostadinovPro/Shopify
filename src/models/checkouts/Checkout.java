@@ -1,18 +1,21 @@
 package models.checkouts;
 
 import common.exceptions.InsufficientPaymentException;
-import common.exceptions.InsufficientQuantityException;
 
+import models.carts.Cart;
+import models.carts.CartItem;
 import models.cashiers.contracts.Cashier;
-import models.products.contracts.Product;
+import models.clients.contracts.Client;
+import models.receipts.Receipt;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Checkout implements models.checkouts.contracts.Checkout {
     private int id;
 
     public Checkout(int _id) {
-        setId(_id);
+        this.setId(_id);
     }
 
     public int getId() {
@@ -27,23 +30,19 @@ public class Checkout implements models.checkouts.contracts.Checkout {
         this.id = _id;
     }
 
-    // TO DO: Add Client and Cart classes and refactor processPurchase(Cashier cashier, Client client)
-    public void processPurchase(Cashier cashier, Product product, int quantity, BigDecimal paymentAmount) {
-        BigDecimal totalPrice = product.calculateTotalPrice().multiply(BigDecimal.valueOf(quantity));
+    public Receipt processPayment(Cashier cashier, Client client) {
+        Cart cart = client.getCart();
 
-        if (quantity >= product.getQuantity()) {
-            throw new InsufficientQuantityException(
-                    "Insufficient quantity of " + product.getName() +
-                    ". Available quantity: " + product.getQuantity() +
-                    ", Required quantity: " + quantity);
+        BigDecimal totalPrice = cart.getTotalPrice();
+
+        if (client.getBudget().compareTo(totalPrice) < 0) {
+            throw new InsufficientPaymentException("Your budget is way too low for payment!");
         }
 
-        if (paymentAmount.compareTo(totalPrice) >= 0) {
-            System.out.println("Transaction successful!");
-        } else {
-            throw new InsufficientPaymentException("Insufficient payment for the purchase.");
-        }
+        client.reduceBudget(totalPrice);
+        List<CartItem> items = List.copyOf(cart.getCartItems().values());
+        cart.clearCart();
 
-        //product.setQuantity(product.getQuantity() - quantity);
+        return new Receipt(cashier, items, totalPrice);
     }
 }
