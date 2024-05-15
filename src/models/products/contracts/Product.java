@@ -11,6 +11,6 @@ public interface Product {
     void decreaseQuantity(int quantity);
     BigDecimal getDeliveryPrice();
     LocalDate getExpirationDate();
-    BigDecimal calculateTotalPrice();
+    BigDecimal calculateFinalPrice();
     boolean isExpired();
 }

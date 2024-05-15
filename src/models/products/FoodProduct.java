@@ -22,9 +22,9 @@ public class FoodProduct extends Product {
     {
         super(_id, _name, _quantity, _deliveryPrice, _expirationDate);
 
-        setMarkupPercentage(_markupPercentage);
-        setApproachingExpirationDays(_approachingExpirationDays);
-        setApproachingExpirationDiscount(_approachingExpirationDiscount);
+        this.setMarkupPercentage(_markupPercentage);
+        this.setApproachingExpirationDays(_approachingExpirationDays);
+        this.setApproachingExpirationDiscount(_approachingExpirationDiscount);
     }
 
     private void setMarkupPercentage(BigDecimal _markupPercentage) {
@@ -52,7 +52,7 @@ public class FoodProduct extends Product {
     }
 
     @Override
-    public BigDecimal calculateTotalPrice() {
+    public BigDecimal calculateFinalPrice() {
         if (super.isExpired()) {
             throw new IllegalStateException("The product has already expired.");
         }
@@ -87,7 +87,7 @@ public class FoodProduct extends Product {
         sb.append("Markup Percentage: ").append(this.markupPercentage).append("%\n");
         sb.append("Expiration Discount: ").append(this.approachingExpirationDiscount).append("%\n");
         sb.append("Is Discount Applied: ").append(this.checkForExpirationDiscount()).append("\n");
-        sb.append("Total Price: $").append(DecimalFormatter.format(this.calculateTotalPrice())).append("\n");
+        sb.append("Total Price: $").append(DecimalFormatter.format(this.calculateFinalPrice())).append("\n");
 
         return sb.toString().trim();
     }

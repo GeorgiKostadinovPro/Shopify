@@ -23,7 +23,7 @@ public class Cart {
     public Cart(int _id) {
         this();
 
-        setId(_id);
+        this.setId(_id);
     }
 
     public int getId() {
@@ -61,7 +61,7 @@ public class Cart {
             cartItem.setQuantity(newQuantity);
         }
 
-        this.totalPrice = this.totalPrice.add(cartItem.getItemPrice());
+        this.totalPrice = this.totalPrice.add(cartItem.getItemTotalPrice());
     }
 
     public void removeProduct(Product product) {
@@ -75,9 +75,13 @@ public class Cart {
 
         cartItems.remove(productId);
 
-        this.totalPrice = this.totalPrice.subtract(cartItem.getItemPrice());
+        this.totalPrice = this.totalPrice.subtract(cartItem.getItemTotalPrice());
 
         product.increaseQuantity(cartItem.getQuantity());
+    }
+
+    public void clearCart() {
+        this.cartItems.clear();
     }
 
     public Map<Integer, CartItem> getCartItems() {

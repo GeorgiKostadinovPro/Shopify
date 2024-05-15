@@ -12,10 +12,10 @@ public class CartItem {
     private int quantity;
 
     public CartItem(int _id, int _cartId, Product _product, int _quantity) {
-        setId(_id);
-        setCartId(_cartId);
-        setProduct(_product);
-        setQuantity(_quantity);
+        this.setId(_id);
+        this.setCartId(_cartId);
+        this.setProduct(_product);
+        this.setQuantity(_quantity);
     }
 
     public int getId() {
@@ -66,15 +66,21 @@ public class CartItem {
         this.quantity = _quantity;
     }
 
-    public BigDecimal getItemPrice() {
-        return this.product.calculateTotalPrice()
+    public BigDecimal getItemTotalPrice() {
+        return this.product.calculateFinalPrice()
                 .multiply(BigDecimal.valueOf(this.getQuantity()));
     }
 
     @Override
     public String toString() {
-        return "ItemId: " + this.id + " -> Product: "
-                + this.product.getName() + " | Quantity: "
-                + this.quantity + " | Total Price: $" + DecimalFormatter.format(getItemPrice());
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("- ")
+                .append(this.getProduct().getName()).append(" (")
+                .append(this.getQuantity()).append(" x $")
+                .append(DecimalFormatter.format(this.getProduct().calculateFinalPrice())).append(" = $")
+                .append(DecimalFormatter.format(this.getItemTotalPrice())).append(") ");
+
+        return sb.toString().trim();
     }
 }

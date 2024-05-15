@@ -20,11 +20,11 @@ public abstract class Product implements models.products.contracts.Product {
             BigDecimal _deliveryPrice,
             LocalDate _expirationDate)
     {
-        setId(_id);
-        setName(_name);
-        setQuantity(_quantity);
-        setDeliveryPrice(_deliveryPrice);
-        setExpirationDate(_expirationDate);
+        this.setId(_id);
+        this.setName(_name);
+        this.setQuantity(_quantity);
+        this.setDeliveryPrice(_deliveryPrice);
+        this.setExpirationDate(_expirationDate);
     }
 
     public int getId() {
@@ -112,19 +112,19 @@ public abstract class Product implements models.products.contracts.Product {
         return currentDate.isAfter(this.expirationDate);
     }
 
-    public abstract BigDecimal calculateTotalPrice();
+    public abstract BigDecimal calculateFinalPrice();
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("--- Product Information ---\n");
-        sb.append("Product ID: " + this.id + "\n");
-        sb.append("Name: " + this.name + "\n");
-        sb.append("Category: " + this.getClass().getSimpleName() + "\n");
-        sb.append("Quantity: " + this.quantity + "\n");
-        sb.append("Delivery Price: $" + DecimalFormatter.format(this.deliveryPrice) + "\n");
-        sb.append("Expiration Date: " + DateFormatter.format(this.expirationDate) + "\n");
+        sb.append("Product ID: ").append(this.id).append("\n");
+        sb.append("Name: ").append(this.name).append("\n");
+        sb.append("Category: ").append(this.getClass().getSimpleName()).append("\n");
+        sb.append("Quantity: ").append(this.quantity).append("\n");
+        sb.append("Delivery Price: $").append(DecimalFormatter.format(this.deliveryPrice)).append("\n");
+        sb.append("Expiration Date: ").append(DateFormatter.formatLocalDate(this.expirationDate)).append("\n");
 
         return sb.toString().trim();
     }

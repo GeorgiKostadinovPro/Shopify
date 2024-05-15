@@ -10,9 +10,9 @@ public class Cashier implements models.cashiers.contracts.Cashier {
     private BigDecimal monthlySalary;
 
     public Cashier(int _id, String _name, BigDecimal _monthlySalary) {
-        setId(_id);
-        setName(_name);
-        setMonthlySalary(_monthlySalary);
+        this.setId(_id);
+        this.setName(_name);
+        this.setMonthlySalary(_monthlySalary);
     }
 
     public int getId() {

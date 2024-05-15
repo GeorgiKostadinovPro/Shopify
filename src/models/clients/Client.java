@@ -13,15 +13,15 @@ public class Client implements models.clients.contracts.Client {
     private final Cart cart;
 
     public Client(int _id, String _name, BigDecimal _budget) {
-        setId(_id);
-        setName(_name);
-        setBudget(_budget);
+        this.setId(_id);
+        this.setName(_name);
+        this.setBudget(_budget);
 
         this.cart = new Cart(this.id);
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     private void setId(int _id) {
@@ -45,7 +45,7 @@ public class Client implements models.clients.contracts.Client {
     }
 
     public BigDecimal getBudget() {
-        return budget;
+        return this.budget;
     }
 
     private void setBudget(BigDecimal _budget) {
