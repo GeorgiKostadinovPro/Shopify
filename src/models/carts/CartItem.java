@@ -75,6 +75,6 @@ public class CartItem {
     public String toString() {
         return "ItemId: " + this.id + " -> Product: "
                 + this.product.getName() + " | Quantity: "
-                + this.quantity + " | Total Price: " + DecimalFormatter.format(getItemPrice());
+                + this.quantity + " | Total Price: $" + DecimalFormatter.format(getItemPrice());
     }
 }
