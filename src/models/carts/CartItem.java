@@ -1,9 +1,9 @@
 package models.carts;
 
 import models.products.contracts.Product;
+import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 
 public class CartItem {
     private int id;
@@ -73,10 +73,8 @@ public class CartItem {
 
     @Override
     public String toString() {
-        DecimalFormat df = new DecimalFormat("#,##0.00");
-
         return "ItemId: " + this.id + " -> Product: "
                 + this.product.getName() + " | Quantity: "
-                + this.quantity + " | Total Price: " + df.format(getItemPrice());
+                + this.quantity + " | Total Price: " + DecimalFormatter.format(getItemPrice());
     }
 }

@@ -1,7 +1,8 @@
 package models.products;
 
+import utilities.DecimalFormatter;
+
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 public class FoodProduct extends Product {
@@ -79,8 +80,6 @@ public class FoodProduct extends Product {
 
     @Override
     public String toString() {
-        DecimalFormat df = new DecimalFormat("#,##0.00");
-
         StringBuilder sb = new StringBuilder();
 
         sb.append(super.toString());
@@ -88,7 +87,7 @@ public class FoodProduct extends Product {
         sb.append("Markup Percentage: ").append(this.markupPercentage).append("%\n");
         sb.append("Expiration Discount: ").append(this.approachingExpirationDiscount).append("%\n");
         sb.append("Is Discount Applied: ").append(this.checkForExpirationDiscount()).append("\n");
-        sb.append("Total Price: $").append(df.format(this.calculateTotalPrice())).append("\n");
+        sb.append("Total Price: $").append(DecimalFormatter.format(this.calculateTotalPrice())).append("\n");
 
         return sb.toString().trim();
     }

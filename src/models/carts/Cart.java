@@ -3,9 +3,9 @@ package models.carts;
 import common.exceptions.InsufficientQuantityException;
 import common.exceptions.ProductNotExistException;
 import models.products.contracts.Product;
+import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,8 +90,6 @@ public class Cart {
 
     @Override
     public String toString() {
-        DecimalFormat df = new DecimalFormat("#,##0.00");
-
         StringBuilder sb = new StringBuilder();
 
         sb.append("Cart Information: \n");
@@ -101,7 +99,7 @@ public class Cart {
         }
 
         sb.append("-------------------------\n");
-        sb.append("Total Price: ").append(df.format(getTotalPrice())).append("\n");
+        sb.append("Total Price: ").append(DecimalFormatter.format(this.getTotalPrice())).append("\n");
 
         return sb.toString().trim();
     }
