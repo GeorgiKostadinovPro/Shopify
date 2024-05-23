@@ -5,6 +5,7 @@ import models.clients.contracts.Client;
 import models.products.FoodProduct;
 import models.products.NonFoodProduct;
 import models.receipts.Receipt;
+import models.shop.contracts.Shop;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -42,5 +43,12 @@ public class Main {
         Receipt receipt = checkout.processPayment(cashier, client);
 
         System.out.println(receipt);
+
+        Shop shop = new models.shop.Shop("Walmart");
+
+        shop.addCashier(cashier);
+        shop.addCashier(new Cashier(2, "Kriso", BigDecimal.valueOf(2100)));
+
+        System.out.println("Cashier total salaries: " + shop.calculateTotalCashierSalariesCost());
     }
 }

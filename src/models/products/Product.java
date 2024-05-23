@@ -87,6 +87,7 @@ public abstract class Product implements models.products.contracts.Product {
         return this.deliveryPrice;
     }
 
+    /*This is the price when we deliver the product in the shop*/
     private void setDeliveryPrice(BigDecimal _deliveryPrice) {
         if (_deliveryPrice == null || _deliveryPrice.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Delivery price must be greater than zero.");
@@ -112,6 +113,7 @@ public abstract class Product implements models.products.contracts.Product {
         return currentDate.isAfter(this.expirationDate);
     }
 
+    /*This is the price when clients buy the product*/
     public abstract BigDecimal calculateFinalPrice();
 
     @Override

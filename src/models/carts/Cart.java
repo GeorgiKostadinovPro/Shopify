@@ -52,11 +52,11 @@ public class Cart {
 
         CartItem cartItem;
 
-        if (!cartItems.containsKey(productId)) {
+        if (!this.cartItems.containsKey(productId)) {
             cartItem = new CartItem(productId, this.id, product, desiredQuantity);
-            cartItems.put(productId, cartItem);
+            this.cartItems.put(productId, cartItem);
         } else {
-            cartItem = cartItems.get(productId);
+            cartItem = this.cartItems.get(productId);
             int newQuantity = cartItem.getQuantity() + desiredQuantity;
             cartItem.setQuantity(newQuantity);
         }
@@ -71,9 +71,9 @@ public class Cart {
             throw new ProductNotExistException("Product with such id does NOT exist!");
         }
 
-        CartItem cartItem = cartItems.get(productId);
+        CartItem cartItem = this.cartItems.get(productId);
 
-        cartItems.remove(productId);
+        this.cartItems.remove(productId);
 
         this.totalPrice = this.totalPrice.subtract(cartItem.getItemTotalPrice());
 

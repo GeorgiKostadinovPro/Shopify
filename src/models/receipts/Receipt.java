@@ -41,6 +41,10 @@ public class Receipt {
         return sb.toString().trim();
     }
 
+    public BigDecimal getTotalPrice() {
+        return this.totalPrice;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
