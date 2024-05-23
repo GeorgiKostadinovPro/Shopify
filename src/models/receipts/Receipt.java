@@ -41,11 +41,15 @@ public class Receipt {
         return sb.toString().trim();
     }
 
+    public BigDecimal getTotalPrice() {
+        return this.totalPrice;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Receipt ").append(this.serialNumber).append("\n");
+        sb.append("Receipt: ").append(this.serialNumber).append("\n");
         sb.append("Issued by: ").append(this.cashier.getName()).append("\n");
         sb.append("Issuance Date: ").append(DateFormatter.formatLocalDateTime(this.issuanceDateTime)).append("\n");
         sb.append("Items:\n");
