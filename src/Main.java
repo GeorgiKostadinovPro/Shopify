@@ -1,6 +1,4 @@
-import models.carts.Cart;
 import models.cashiers.Cashier;
-import models.checkouts.Checkout;
 import models.clients.contracts.Client;
 import models.products.FoodProduct;
 import models.products.NonFoodProduct;
