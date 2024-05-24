@@ -5,13 +5,12 @@ import models.carts.CartItem;
 import utilities.DateFormatter;
 import utilities.DecimalFormatter;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 
-public class Receipt implements Serializable {
+public class Receipt {
     private final String serialNumber;
     private final BigDecimal totalPrice;
     private final LocalDateTime issuanceDateTime;

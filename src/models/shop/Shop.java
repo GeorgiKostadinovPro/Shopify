@@ -79,7 +79,7 @@ public class Shop implements models.shop.contracts.Shop {
     }
 
     public void addCashier(Cashier _cashier) {
-        int cashierId = this.cashiers.size() + 1;
+        int cashierId = _cashier.getId();
 
         if (this.cashiers.containsKey(cashierId)) {
             throw new ExistingCashierException("Cashier with such Id is already presented!");
