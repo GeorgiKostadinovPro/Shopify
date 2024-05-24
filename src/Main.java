@@ -48,7 +48,5 @@ public class Main {
 
         shop.addCashier(cashier);
         shop.addCashier(new Cashier(2, "Kriso", BigDecimal.valueOf(2100)));
-
-        System.out.println("Cashier total salaries: " + shop.calculateTotalCashierSalariesCost());
     }
 }
