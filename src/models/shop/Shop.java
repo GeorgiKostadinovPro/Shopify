@@ -1,8 +1,11 @@
 package models.shop;
 
 import common.exceptions.CashierNotExistException;
+import common.exceptions.CheckoutNotExistException;
 import common.exceptions.ExistingCashierException;
 import models.cashiers.contracts.Cashier;
+import models.checkouts.contracts.Checkout;
+import models.clients.contracts.Client;
 import models.products.contracts.Product;
 import models.receipts.Receipt;
 
@@ -15,11 +18,13 @@ public class Shop implements models.shop.contracts.Shop {
 
     private final Map<String, Receipt> receipts;
     private final Map<Integer, Cashier> cashiers;
+    private final Map<Integer, Checkout> checkouts;
     private final Map<Integer, Product> deliveredProducts;
 
     private Shop() {
         this.receipts = new HashMap<>();
         this.cashiers = new HashMap<>();
+        this.checkouts = new HashMap<>();
         this.deliveredProducts = new HashMap<>();
     }
 
@@ -35,6 +40,10 @@ public class Shop implements models.shop.contracts.Shop {
         }
 
         this.name = _name;
+    }
+
+    public int getTotalReceipts() {
+        return this.receipts.size();
     }
 
     public BigDecimal calculateTotalCashierSalariesCost() {
@@ -61,7 +70,7 @@ public class Shop implements models.shop.contracts.Shop {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public BigDecimal totalGeneralIncome() {
+    public BigDecimal calculateTotalGeneralIncome() {
         BigDecimal totalIncomeFromSoldProducts = this.calculateTotalIncomeFromSoldProducts();
         BigDecimal totalShopCostForCashiersAndDelivery = this.calculateTotalCashierSalariesCost()
                                                                 .add(this.calculateTotalProductsDeliveryCost());
@@ -85,5 +94,37 @@ public class Shop implements models.shop.contracts.Shop {
         }
 
         this.cashiers.remove(_cashierId);
+    }
+
+    public void addCheckout() {
+        int checkoutId = this.checkouts.size() + 1;
+        Checkout checkout = new models.checkouts.Checkout(checkoutId);
+        this.checkouts.put(checkoutId, checkout);
+    }
+
+    public void removeCheckout(Integer _checkoutId) {
+        if (!this.checkouts.containsKey(_checkoutId)) {
+            throw new CheckoutNotExistException("Checkout with such Id does not exist!");
+        }
+
+        this.checkouts.remove(_checkoutId);
+    }
+
+    public Receipt processCheckout(Client _client) {
+        if (this.checkouts.isEmpty()) {
+            throw new UnsupportedOperationException("Cannot process checkout because there are NO checkouts available!");
+        }
+
+        if (this.cashiers.isEmpty()) {
+            throw new UnsupportedOperationException("Cannot process checkout because there are NO cashiers available!");
+        }
+
+        Checkout checkout = this.checkouts.values().stream().findFirst().get();
+        Cashier cashier = this.cashiers.values().stream().findFirst().get();
+
+        Receipt receipt = checkout.processPayment(cashier, _client);
+        this.receipts.put(receipt.getSerialNumber(), receipt);
+
+        return receipt;
     }
 }

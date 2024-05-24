@@ -41,6 +41,10 @@ public class Receipt {
         return sb.toString().trim();
     }
 
+    public String getSerialNumber() {
+        return this.serialNumber;
+    }
+
     public BigDecimal getTotalPrice() {
         return this.totalPrice;
     }

@@ -1,15 +1,24 @@
 package models.shop.contracts;
 
 import models.cashiers.contracts.Cashier;
+import models.clients.contracts.Client;
+import models.receipts.Receipt;
 
 import java.math.BigDecimal;
 
 public interface Shop {
-    public BigDecimal calculateTotalCashierSalariesCost();
-    public BigDecimal calculateTotalProductsDeliveryCost();
-    public BigDecimal calculateTotalIncomeFromSoldProducts();
-    public BigDecimal totalGeneralIncome();
+    int getTotalReceipts();
 
-    public void addCashier(Cashier _cashier);
-    public void removeCashier(Integer _cashierId);
+    BigDecimal calculateTotalCashierSalariesCost();
+    BigDecimal calculateTotalProductsDeliveryCost();
+    BigDecimal calculateTotalIncomeFromSoldProducts();
+    BigDecimal calculateTotalGeneralIncome();
+
+    void addCashier(Cashier _cashier);
+    void removeCashier(Integer _cashierId);
+
+    void addCheckout();
+    void removeCheckout(Integer _checkoutId);
+
+    Receipt processCheckout(Client _client);
 }
