@@ -5,8 +5,18 @@ import models.receipts.Receipt;
 import java.io.*;
 
 public class FileService {
+    private static final String RECEIPTS_FOLDER = "receiptsTracker/";
+
+    public FileService() {
+        File folder = new File(RECEIPTS_FOLDER);
+
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+    }
+
     public void saveReceiptAsFile(Receipt receipt) {
-        String fileName = "receipt_" + receipt.getSerialNumber() + ".txt";
+        String fileName = RECEIPTS_FOLDER + "receipt_" + receipt.getSerialNumber() + ".txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(receipt.toString());
         } catch (IOException e) {
@@ -15,7 +25,7 @@ public class FileService {
     }
 
     public String readReceiptFromFile(String serialNumber) {
-        String fileName = "receipt_" + serialNumber + ".txt";
+        String fileName = RECEIPTS_FOLDER + "receipt_" + serialNumber + ".txt";
         StringBuilder content = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
