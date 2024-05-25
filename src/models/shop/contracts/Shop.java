@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 public interface Shop {
     int getTotalReceipts();
 
-    BigDecimal calculateTotalCashierSalariesCost();
-    BigDecimal calculateTotalProductsDeliveryCost();
+    BigDecimal calculateTotalCashierSalariesExpenses();
+    BigDecimal calculateTotalProductsDeliveryExpenses();
     BigDecimal calculateTotalIncomeFromSoldProducts();
     BigDecimal calculateTotalGeneralIncome();
 

@@ -3,11 +3,13 @@ package models.shop;
 import common.exceptions.CashierNotExistException;
 import common.exceptions.CheckoutNotExistException;
 import common.exceptions.ExistingCashierException;
+import common.messages.ExceptionMessages;
 import models.cashiers.contracts.Cashier;
 import models.checkouts.contracts.Checkout;
 import models.clients.contracts.Client;
 import models.products.contracts.Product;
 import models.receipts.Receipt;
+import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -36,7 +38,7 @@ public class Shop implements models.shop.contracts.Shop {
 
     private void setName(String _name) {
         if (_name == null || _name.isEmpty()) {
-            throw new IllegalArgumentException("Name must NOT be empty.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_NAME);
         }
 
         this.name = _name;
@@ -46,7 +48,7 @@ public class Shop implements models.shop.contracts.Shop {
         return this.receipts.size();
     }
 
-    public BigDecimal calculateTotalCashierSalariesCost() {
+    public BigDecimal calculateTotalCashierSalariesExpenses() {
         return this.cashiers
                 .values()
                 .stream()
@@ -54,7 +56,7 @@ public class Shop implements models.shop.contracts.Shop {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public BigDecimal calculateTotalProductsDeliveryCost() {
+    public BigDecimal calculateTotalProductsDeliveryExpenses() {
         return this.deliveredProducts
                 .values()
                 .stream()
@@ -72,8 +74,8 @@ public class Shop implements models.shop.contracts.Shop {
 
     public BigDecimal calculateTotalGeneralIncome() {
         BigDecimal totalIncomeFromSoldProducts = this.calculateTotalIncomeFromSoldProducts();
-        BigDecimal totalShopCostForCashiersAndDelivery = this.calculateTotalCashierSalariesCost()
-                                                                .add(this.calculateTotalProductsDeliveryCost());
+        BigDecimal totalShopCostForCashiersAndDelivery = this.calculateTotalCashierSalariesExpenses()
+                                                                .add(this.calculateTotalProductsDeliveryExpenses());
 
         return totalIncomeFromSoldProducts.subtract(totalShopCostForCashiersAndDelivery);
     }
@@ -82,7 +84,7 @@ public class Shop implements models.shop.contracts.Shop {
         int cashierId = _cashier.getId();
 
         if (this.cashiers.containsKey(cashierId)) {
-            throw new ExistingCashierException("Cashier with such Id is already presented!");
+            throw new ExistingCashierException(ExceptionMessages.CASHIER_ALREADY_EXISTS);
         }
 
         this.cashiers.put(cashierId, _cashier);
@@ -90,7 +92,7 @@ public class Shop implements models.shop.contracts.Shop {
 
     public void removeCashier(Integer _cashierId) {
         if (!this.cashiers.containsKey(_cashierId)) {
-            throw new CashierNotExistException("Cashier with such Id does NOT exist!");
+            throw new CashierNotExistException(ExceptionMessages.CASHIER_NOT_PRESENTED);
         }
 
         this.cashiers.remove(_cashierId);
@@ -104,7 +106,7 @@ public class Shop implements models.shop.contracts.Shop {
 
     public void removeCheckout(Integer _checkoutId) {
         if (!this.checkouts.containsKey(_checkoutId)) {
-            throw new CheckoutNotExistException("Checkout with such Id does not exist!");
+            throw new CheckoutNotExistException(ExceptionMessages.CHECKOUT_NOT_PRESENTED);
         }
 
         this.checkouts.remove(_checkoutId);
@@ -112,11 +114,11 @@ public class Shop implements models.shop.contracts.Shop {
 
     public Receipt processCheckout(Client _client) {
         if (this.checkouts.isEmpty()) {
-            throw new UnsupportedOperationException("Cannot process checkout because there are NO checkouts available!");
+            throw new UnsupportedOperationException(ExceptionMessages.NO_AVAILABLE_CHECKOUTS);
         }
 
         if (this.cashiers.isEmpty()) {
-            throw new UnsupportedOperationException("Cannot process checkout because there are NO cashiers available!");
+            throw new UnsupportedOperationException(ExceptionMessages.NO_AVAILABLE_CASHIERS);
         }
 
         Checkout checkout = this.checkouts.values().stream().findFirst().get();
@@ -126,5 +128,48 @@ public class Shop implements models.shop.contracts.Shop {
         this.receipts.put(receipt.getSerialNumber(), receipt);
 
         return receipt;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(String.format("--- Welcome to %s! ---\n", this.name));
+
+        sb.append("\n");
+
+        sb.append("--- Information ---\n");
+        sb.append(String.format("Receipts: %d | Cashiers: %d | Checkouts: %d | Products: %d\n",
+                this.receipts.size(), this.cashiers.size(), this.checkouts.size(), this.deliveredProducts.size()));
+
+        sb.append("\n");
+
+        sb.append("--- Income and Expenses ---\n");
+        sb.append(String.format("Total Cashiers Salaries Expenses: $%s\n", DecimalFormatter.format(this.calculateTotalCashierSalariesExpenses())));
+        sb.append(String.format("Total Products Delivery Expenses: $%s\n", DecimalFormatter.format(this.calculateTotalProductsDeliveryExpenses())));
+        sb.append(String.format("Total Income from Sold Products: $%s\n", DecimalFormatter.format(this.calculateTotalIncomeFromSoldProducts())));
+        sb.append(String.format("Total General Income: $%s\n", DecimalFormatter.format(this.calculateTotalGeneralIncome())));
+
+        sb.append("\n");
+
+        sb.append("--- Cashiers Information ---\n");
+
+        if (this.cashiers.isEmpty()) {
+            sb.append("No Available Cashiers!\n");
+        } else {
+            this.cashiers.values().forEach(c -> sb.append(c.toString()));
+        }
+
+        sb.append("\n");
+
+        sb.append("--- Products Information ---\n");
+
+        if (this.deliveredProducts.isEmpty()) {
+            sb.append("No Available Products!\n");
+        } else {
+            this.deliveredProducts.values().forEach(e -> sb.append(e.toString()));
+        }
+
+        return sb.toString().trim();
     }
 }

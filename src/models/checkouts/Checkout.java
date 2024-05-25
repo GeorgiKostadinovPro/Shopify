@@ -2,6 +2,7 @@ package models.checkouts;
 
 import common.exceptions.InsufficientPaymentException;
 
+import common.messages.ExceptionMessages;
 import models.carts.Cart;
 import models.carts.CartItem;
 import models.cashiers.contracts.Cashier;
@@ -24,7 +25,7 @@ public class Checkout implements models.checkouts.contracts.Checkout {
 
     private void setId(int _id) {
         if (_id <= 0) {
-            throw new IllegalArgumentException("Id must be greater than 0.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
         }
 
         this.id = _id;
@@ -36,7 +37,7 @@ public class Checkout implements models.checkouts.contracts.Checkout {
         BigDecimal totalPrice = cart.getTotalPrice();
 
         if (client.getBudget().compareTo(totalPrice) < 0) {
-            throw new InsufficientPaymentException("Your budget is way too low for payment!");
+            throw new InsufficientPaymentException(ExceptionMessages.INSUFFICIENT_BUDGET);
         }
 
         client.reduceBudget(totalPrice);

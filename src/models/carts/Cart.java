@@ -2,6 +2,7 @@ package models.carts;
 
 import common.exceptions.InsufficientQuantityException;
 import common.exceptions.ProductNotExistException;
+import common.messages.ExceptionMessages;
 import models.products.contracts.Product;
 import utilities.DecimalFormatter;
 
@@ -32,7 +33,7 @@ public class Cart {
 
     private void setId(int _id) {
         if (_id <= 0) {
-            throw new IllegalArgumentException("Id must be greater than 0.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
         }
 
         this.id = _id;
@@ -43,9 +44,8 @@ public class Cart {
 
         if (desiredQuantity > product.getQuantity()) {
             throw new InsufficientQuantityException(
-                                    "Insufficient quantity of " + product.getName() +
-                                    ". Available quantity: " + product.getQuantity() +
-                                    ", Required quantity: " + (desiredQuantity - product.getQuantity()));
+                    String.format(ExceptionMessages.INSUFFICIENT_QUANTITY,
+                            product.getName(), product.getQuantity(), (desiredQuantity - product.getQuantity())));
         }
 
         product.decreaseQuantity(desiredQuantity);
@@ -68,7 +68,7 @@ public class Cart {
         int productId = product.getId();
 
         if (!this.cartItems.containsKey(productId)) {
-            throw new ProductNotExistException("Product with such id does NOT exist!");
+            throw new ProductNotExistException(ExceptionMessages.INVALID_PRODUCT_ID);
         }
 
         CartItem cartItem = this.cartItems.get(productId);

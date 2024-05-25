@@ -1,5 +1,6 @@
 package models.products;
 
+import common.messages.ExceptionMessages;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
@@ -29,7 +30,7 @@ public class NonFoodProduct extends Product {
 
     private void setMarkupPercentage(BigDecimal _markupPercentage) {
         if (_markupPercentage.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Markup percentage cannot be negative.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_MARKUP_PERCENTAGE);
         }
 
         this.markupPercentage = _markupPercentage;
@@ -37,7 +38,7 @@ public class NonFoodProduct extends Product {
 
     private void setApproachingExpirationDays(int _approachingExpirationDays) {
         if (_approachingExpirationDays < 0) {
-            throw new IllegalArgumentException("Approaching expiration days cannot be negative.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_APPROACHING_EXPIRATION_DAYS);
         }
 
         this.approachingExpirationDays = _approachingExpirationDays;
@@ -45,7 +46,7 @@ public class NonFoodProduct extends Product {
 
     private void setApproachingExpirationDiscount(BigDecimal _approachingExpirationDiscount) {
         if (_approachingExpirationDiscount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Expiration discount cannot be negative.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_EXPIRATION_DISCOUNT);
         }
 
         this.approachingExpirationDiscount = _approachingExpirationDiscount;
@@ -53,9 +54,7 @@ public class NonFoodProduct extends Product {
 
     @Override
     public BigDecimal calculateFinalPrice() {
-        if (super.isExpired()) {
-            throw new IllegalStateException("The product has already expired.");
-        }
+        super.calculateFinalPrice();
 
         BigDecimal valueToMultiplyPrice = BigDecimal.ONE.add(
                 this.markupPercentage.divide(BigDecimal.valueOf(100))
