@@ -40,14 +40,10 @@ public class Main {
         shop.addCashier(new Cashier(1, "Lyubo", BigDecimal.valueOf(2000)));
         shop.addCashier(new Cashier(2, "Kriso", BigDecimal.valueOf(2100)));
         shop.addCheckout();
+        shop.addCheckout();
 
         Receipt receipt = shop.processCheckout(client);
 
-        FileService fileService = new FileService();
-
-        fileService.saveReceiptAsFile(receipt);
-
-        System.out.println(shop.getTotalReceipts());
-        System.out.println(fileService.readReceiptFromFile(receipt.getSerialNumber()));
+        System.out.println(shop);
     }
 }
