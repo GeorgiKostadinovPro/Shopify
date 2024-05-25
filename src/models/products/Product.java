@@ -1,5 +1,6 @@
 package models.products;
 
+import common.messages.ExceptionMessages;
 import utilities.DateFormatter;
 import utilities.DecimalFormatter;
 
@@ -33,7 +34,7 @@ public abstract class Product implements models.products.contracts.Product {
 
     private void setId(int _id) {
         if (_id <= 0) {
-            throw new IllegalArgumentException("Id must be greater than 0.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
         }
 
         this.id = _id;
@@ -45,7 +46,7 @@ public abstract class Product implements models.products.contracts.Product {
 
     private void setName(String _name) {
         if (_name == null || _name.isEmpty()) {
-            throw new IllegalArgumentException("Name must NOT be empty.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_NAME);
         }
 
         this.name = _name;
@@ -57,7 +58,7 @@ public abstract class Product implements models.products.contracts.Product {
 
     private void setQuantity(int _quantity) {
         if (_quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than 0.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_PRODUCT_QUANTITY);
         }
 
         this.quantity = _quantity;
@@ -65,7 +66,7 @@ public abstract class Product implements models.products.contracts.Product {
 
     public void increaseQuantity(int _quantity) {
         if (_quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than 0.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_PRODUCT_QUANTITY);
         }
 
         this.quantity += _quantity;
@@ -73,11 +74,11 @@ public abstract class Product implements models.products.contracts.Product {
 
     public void decreaseQuantity(int _quantity) {
         if (_quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than 0.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_PRODUCT_QUANTITY);
         }
 
         if (this.quantity - _quantity < 0) {
-            throw new IllegalArgumentException("Amount too big. Cannot reduce the base quantity.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_QUANTITY_AMOUNT_TO_REDUCE);
         }
 
         this.quantity -= _quantity;
@@ -90,7 +91,7 @@ public abstract class Product implements models.products.contracts.Product {
     /*This is the price when we deliver the product in the shop*/
     private void setDeliveryPrice(BigDecimal _deliveryPrice) {
         if (_deliveryPrice == null || _deliveryPrice.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Delivery price must be greater than zero.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_DELIVERY_PRICE);
         }
 
         this.deliveryPrice = _deliveryPrice;
@@ -102,7 +103,7 @@ public abstract class Product implements models.products.contracts.Product {
 
     private void setExpirationDate(LocalDate _expirationDate) {
         if (!_expirationDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Expiration date must be before current date.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_EXPIRATION_DATE);
         }
 
         this.expirationDate = _expirationDate;
@@ -113,8 +114,16 @@ public abstract class Product implements models.products.contracts.Product {
         return currentDate.isAfter(this.expirationDate);
     }
 
-    /*This is the price when clients buy the product*/
-    public abstract BigDecimal calculateFinalPrice();
+    //This is the price when clients buy the product.
+    // Virtual Method. Descendants have different logic.
+    public BigDecimal calculateFinalPrice()
+    {
+        if (this.isExpired()) {
+            throw new IllegalStateException(ExceptionMessages.PRODUCT_ALREADY_EXPIRED);
+        }
+
+        return BigDecimal.ZERO;
+    }
 
     @Override
     public String toString() {

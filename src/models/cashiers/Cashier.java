@@ -1,5 +1,6 @@
 package models.cashiers;
 
+import common.messages.ExceptionMessages;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
@@ -21,7 +22,7 @@ public class Cashier implements models.cashiers.contracts.Cashier {
 
     private void setId(int _id) {
         if (_id <= 0) {
-            throw new IllegalArgumentException("Id must be greater than 0.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
         }
 
         this.id = _id;
@@ -33,7 +34,7 @@ public class Cashier implements models.cashiers.contracts.Cashier {
 
     private void setName(String _name) {
         if (_name == null || _name.isEmpty()) {
-            throw new IllegalArgumentException("Name must NOT be empty.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_NAME);
         }
 
         this.name = _name;
@@ -45,7 +46,7 @@ public class Cashier implements models.cashiers.contracts.Cashier {
 
     public void setMonthlySalary(BigDecimal _monthlySalary) {
         if (_monthlySalary == null || _monthlySalary.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Monthly salary must be greater than zero.");
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_MONTHLY_SALARY);
         }
 
         this.monthlySalary = _monthlySalary;
