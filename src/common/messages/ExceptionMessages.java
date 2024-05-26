@@ -37,4 +37,6 @@ public class ExceptionMessages {
     public static final String PRODUCT_ALREADY_EXPIRED = "The product has already expired!";
     public static final String INVALID_APPROACHING_EXPIRATION_DAYS = "Approaching expiration days cannot be negative!";
     public static final String INVALID_EXPIRATION_DISCOUNT = "Expiration discount cannot be negative!";
+
+    public static final String PRODUCT_ALREADY_EXISTS = "Product with such ID or Name already exists!";
 }

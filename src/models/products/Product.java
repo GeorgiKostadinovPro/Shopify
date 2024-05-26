@@ -129,7 +129,6 @@ public abstract class Product implements models.products.contracts.Product {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("--- Product Information ---\n");
         sb.append("Product ID: ").append(this.id).append("\n");
         sb.append("Name: ").append(this.name).append("\n");
         sb.append("Category: ").append(this.getClass().getSimpleName()).append("\n");

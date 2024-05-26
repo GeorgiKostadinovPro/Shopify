@@ -81,8 +81,8 @@ public class FoodProduct extends Product {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(super.toString());
-        sb.append("\n --- More Information --- \n");
+        sb.append(super.toString()).append("\n");
+        sb.append(" --- More Information --- \n");
         sb.append("Markup Percentage: ").append(this.markupPercentage).append("%\n");
         sb.append("Expiration Discount: ").append(this.approachingExpirationDiscount).append("%\n");
         sb.append("Is Discount Applied: ").append(this.checkForExpirationDiscount()).append("\n");

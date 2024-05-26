@@ -1,8 +1,6 @@
 package models.shop;
 
-import common.exceptions.CashierNotExistException;
-import common.exceptions.CheckoutNotExistException;
-import common.exceptions.ExistingCashierException;
+import common.exceptions.*;
 import common.messages.ExceptionMessages;
 import models.cashiers.contracts.Cashier;
 import models.checkouts.contracts.Checkout;
@@ -26,14 +24,14 @@ public class Shop implements models.shop.contracts.Shop {
 
     private final CashierRepository cashierRepository;
     private final CheckoutRepository checkoutRepository;
-    private final ProductRepository deliveredProductRepository;
+    private final ProductRepository productRepository;
 
     private Shop() {
         this.receipts = new HashMap<>();
 
         this.cashierRepository = new CashierRepository();
         this.checkoutRepository = new CheckoutRepository();
-        this.deliveredProductRepository = new ProductRepository();
+        this.productRepository = new ProductRepository();
     }
 
     public Shop(int _id, String _name) {
@@ -76,7 +74,7 @@ public class Shop implements models.shop.contracts.Shop {
     }
 
     public BigDecimal calculateTotalProductsDeliveryExpenses() {
-        return this.deliveredProductRepository
+        return this.productRepository
                 .getAll()
                 .stream()
                 .map(Product::getDeliveryPrice)
@@ -129,6 +127,23 @@ public class Shop implements models.shop.contracts.Shop {
         this.checkoutRepository.remove(_checkoutId);
     }
 
+    public void addProduct(Product _product) {
+        if (this.productRepository.getById(_product.getId()) != null
+        || this.productRepository.getAll().stream().anyMatch(p -> p.getName().equals(_product.getName()))) {
+            throw new ExistingProductException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
+        }
+
+        this.productRepository.add(_product);
+    }
+
+    public void removeProduct(int _productId) {
+        if (this.productRepository.getById(_productId) == null) {
+            throw new ProductNotExistException(ExceptionMessages.INVALID_PRODUCT_ID);
+        }
+
+        this.checkoutRepository.remove(_productId);
+    }
+
     public Receipt processCheckout(Client _client) {
         Checkout checkout = this.checkoutRepository
                 .getAll().stream().findFirst().orElse(null);
@@ -163,7 +178,7 @@ public class Shop implements models.shop.contracts.Shop {
                 this.receipts.size(),
                 this.cashierRepository.getAll().size(),
                 this.checkoutRepository.getAll().size(),
-                this.deliveredProductRepository.getAll().size()));
+                this.productRepository.getAll().size()));
 
         sb.append("\n");
 
@@ -187,10 +202,10 @@ public class Shop implements models.shop.contracts.Shop {
 
         sb.append("--- Products Information ---\n");
 
-        if (this.deliveredProductRepository.getAll().isEmpty()) {
-            sb.append("No Available Products!\n");
+        if (this.productRepository.getAll().isEmpty()) {
+            sb.append("No Available Products!");
         } else {
-            this.deliveredProductRepository.getAll().forEach(e -> sb.append(e.toString()));
+            this.productRepository.getAll().forEach(e -> sb.append(e.toString()).append("\n\n"));
         }
 
         return sb.toString().trim();
