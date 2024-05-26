@@ -11,6 +11,7 @@ import models.products.contracts.Product;
 import models.receipts.Receipt;
 import repositories.CashierRepository;
 import repositories.CheckoutRepository;
+import repositories.ProductRepository;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
@@ -21,15 +22,17 @@ public class Shop implements models.shop.contracts.Shop {
     private String name;
 
     private final Map<String, Receipt> receipts;
+
     private final CashierRepository cashierRepository;
     private final CheckoutRepository checkoutRepository;
-    private final Map<Integer, Product> deliveredProducts;
+    private final ProductRepository deliveredProductRepository;
 
     private Shop() {
         this.receipts = new HashMap<>();
+
         this.cashierRepository = new CashierRepository();
         this.checkoutRepository = new CheckoutRepository();
-        this.deliveredProducts = new HashMap<>();
+        this.deliveredProductRepository = new ProductRepository();
     }
 
     public Shop(String _name) {
@@ -59,8 +62,8 @@ public class Shop implements models.shop.contracts.Shop {
     }
 
     public BigDecimal calculateTotalProductsDeliveryExpenses() {
-        return this.deliveredProducts
-                .values()
+        return this.deliveredProductRepository
+                .getAll()
                 .stream()
                 .map(Product::getDeliveryPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -143,7 +146,10 @@ public class Shop implements models.shop.contracts.Shop {
 
         sb.append("--- Information ---\n");
         sb.append(String.format("Receipts: %d | Cashiers: %d | Checkouts: %d | Products: %d\n",
-                this.receipts.size(), this.cashierRepository.getAll().size(), this.checkoutRepository.getAll().size(), this.deliveredProducts.size()));
+                this.receipts.size(),
+                this.cashierRepository.getAll().size(),
+                this.checkoutRepository.getAll().size(),
+                this.deliveredProductRepository.getAll().size()));
 
         sb.append("\n");
 
@@ -167,10 +173,10 @@ public class Shop implements models.shop.contracts.Shop {
 
         sb.append("--- Products Information ---\n");
 
-        if (this.deliveredProducts.isEmpty()) {
+        if (this.deliveredProductRepository.getAll().isEmpty()) {
             sb.append("No Available Products!\n");
         } else {
-            this.deliveredProducts.values().forEach(e -> sb.append(e.toString()));
+            this.deliveredProductRepository.getAll().forEach(e -> sb.append(e.toString()));
         }
 
         return sb.toString().trim();
