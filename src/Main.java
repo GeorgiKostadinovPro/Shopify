@@ -40,7 +40,7 @@ public class Main {
 
         System.out.println(clientRepository.getById(1));
 
-        Shop shop = new models.shop.Shop("Walmart");
+        Shop shop = new models.shop.Shop(1,"Walmart");
 
         shop.addCashier(new Cashier(1, "Lyubo", BigDecimal.valueOf(2000)));
         shop.addCashier(new Cashier(2, "Kriso", BigDecimal.valueOf(2100)));

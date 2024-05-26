@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Shop implements models.shop.contracts.Shop {
+    private int id;
     private String name;
 
     private final Map<String, Receipt> receipts;
@@ -35,10 +36,23 @@ public class Shop implements models.shop.contracts.Shop {
         this.deliveredProductRepository = new ProductRepository();
     }
 
-    public Shop(String _name) {
+    public Shop(int _id, String _name) {
         this();
 
+        this.setId(_id);
         this.setName(_name);
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    private void setId(int _id) {
+        if (_id <= 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
+        }
+
+        this.id = _id;
     }
 
     private void setName(String _name) {

@@ -7,6 +7,7 @@ import models.receipts.Receipt;
 import java.math.BigDecimal;
 
 public interface Shop {
+    int getId();
     int getTotalReceipts();
 
     BigDecimal calculateTotalCashierSalariesExpenses();
