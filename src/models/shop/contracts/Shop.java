@@ -2,6 +2,7 @@ package models.shop.contracts;
 
 import models.cashiers.contracts.Cashier;
 import models.clients.contracts.Client;
+import models.products.contracts.Product;
 import models.receipts.Receipt;
 
 import java.math.BigDecimal;
@@ -20,6 +21,9 @@ public interface Shop {
 
     void addCheckout();
     void removeCheckout(int _checkoutId);
+
+    void addProduct(Product _product);
+    void removeProduct(int _productId);
 
     Receipt processCheckout(Client _client);
 }

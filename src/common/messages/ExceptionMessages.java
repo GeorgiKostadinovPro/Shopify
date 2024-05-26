@@ -5,6 +5,9 @@ public class ExceptionMessages {
     public static final String INVALID_IDENTIFIER = "Id must be greater than 0!";
     public static final String INVALID_NAME = "Name must NOT be empty!";
 
+    // Shop
+    public static final String INVALID_SHOP_ID = "Shop with such ID is NOT registered!";
+
     // Cashier
     public static final String INVALID_MONTHLY_SALARY = "Monthly salary must be greater than 0!";
     public static final String CASHIER_ALREADY_EXISTS = "Cashier with such Id is already presented!";
@@ -37,4 +40,6 @@ public class ExceptionMessages {
     public static final String PRODUCT_ALREADY_EXPIRED = "The product has already expired!";
     public static final String INVALID_APPROACHING_EXPIRATION_DAYS = "Approaching expiration days cannot be negative!";
     public static final String INVALID_EXPIRATION_DISCOUNT = "Expiration discount cannot be negative!";
+
+    public static final String PRODUCT_ALREADY_EXISTS = "Product with such ID or Name already exists!";
 }
