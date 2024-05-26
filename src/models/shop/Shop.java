@@ -9,6 +9,9 @@ import models.checkouts.contracts.Checkout;
 import models.clients.contracts.Client;
 import models.products.contracts.Product;
 import models.receipts.Receipt;
+import repositories.CashierRepository;
+import repositories.CheckoutRepository;
+import repositories.ProductRepository;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
@@ -16,24 +19,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Shop implements models.shop.contracts.Shop {
+    private int id;
     private String name;
 
     private final Map<String, Receipt> receipts;
-    private final Map<Integer, Cashier> cashiers;
-    private final Map<Integer, Checkout> checkouts;
-    private final Map<Integer, Product> deliveredProducts;
+
+    private final CashierRepository cashierRepository;
+    private final CheckoutRepository checkoutRepository;
+    private final ProductRepository deliveredProductRepository;
 
     private Shop() {
         this.receipts = new HashMap<>();
-        this.cashiers = new HashMap<>();
-        this.checkouts = new HashMap<>();
-        this.deliveredProducts = new HashMap<>();
+
+        this.cashierRepository = new CashierRepository();
+        this.checkoutRepository = new CheckoutRepository();
+        this.deliveredProductRepository = new ProductRepository();
     }
 
-    public Shop(String _name) {
+    public Shop(int _id, String _name) {
         this();
 
+        this.setId(_id);
         this.setName(_name);
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    private void setId(int _id) {
+        if (_id <= 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
+        }
+
+        this.id = _id;
     }
 
     private void setName(String _name) {
@@ -49,16 +68,16 @@ public class Shop implements models.shop.contracts.Shop {
     }
 
     public BigDecimal calculateTotalCashierSalariesExpenses() {
-        return this.cashiers
-                .values()
+        return this.cashierRepository
+                .getAll()
                 .stream()
                 .map(Cashier::getMonthlySalary)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal calculateTotalProductsDeliveryExpenses() {
-        return this.deliveredProducts
-                .values()
+        return this.deliveredProductRepository
+                .getAll()
                 .stream()
                 .map(Product::getDeliveryPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -81,48 +100,49 @@ public class Shop implements models.shop.contracts.Shop {
     }
 
     public void addCashier(Cashier _cashier) {
-        int cashierId = _cashier.getId();
-
-        if (this.cashiers.containsKey(cashierId)) {
+        if (this.cashierRepository.getById(_cashier.getId()) != null) {
             throw new ExistingCashierException(ExceptionMessages.CASHIER_ALREADY_EXISTS);
         }
 
-        this.cashiers.put(cashierId, _cashier);
+        this.cashierRepository.add(_cashier);
     }
 
-    public void removeCashier(Integer _cashierId) {
-        if (!this.cashiers.containsKey(_cashierId)) {
+    public void removeCashier(int _cashierId) {
+        if (this.cashierRepository.getById(_cashierId) == null) {
             throw new CashierNotExistException(ExceptionMessages.CASHIER_NOT_PRESENTED);
         }
 
-        this.cashiers.remove(_cashierId);
+        this.cashierRepository.remove(_cashierId);
     }
 
     public void addCheckout() {
-        int checkoutId = this.checkouts.size() + 1;
+        int checkoutId = this.checkoutRepository.getAll().size() + 1;
         Checkout checkout = new models.checkouts.Checkout(checkoutId);
-        this.checkouts.put(checkoutId, checkout);
+        this.checkoutRepository.add(checkout);
     }
 
-    public void removeCheckout(Integer _checkoutId) {
-        if (!this.checkouts.containsKey(_checkoutId)) {
+    public void removeCheckout(int _checkoutId) {
+        if (this.checkoutRepository.getById(_checkoutId) == null) {
             throw new CheckoutNotExistException(ExceptionMessages.CHECKOUT_NOT_PRESENTED);
         }
 
-        this.checkouts.remove(_checkoutId);
+        this.checkoutRepository.remove(_checkoutId);
     }
 
     public Receipt processCheckout(Client _client) {
-        if (this.checkouts.isEmpty()) {
+        Checkout checkout = this.checkoutRepository
+                .getAll().stream().findFirst().orElse(null);
+
+        if (checkout == null) {
             throw new UnsupportedOperationException(ExceptionMessages.NO_AVAILABLE_CHECKOUTS);
         }
 
-        if (this.cashiers.isEmpty()) {
+        Cashier cashier = this.cashierRepository
+                .getAll().stream().findAny().orElse(null);
+
+        if (cashier == null) {
             throw new UnsupportedOperationException(ExceptionMessages.NO_AVAILABLE_CASHIERS);
         }
-
-        Checkout checkout = this.checkouts.values().stream().findFirst().get();
-        Cashier cashier = this.cashiers.values().stream().findFirst().get();
 
         Receipt receipt = checkout.processPayment(cashier, _client);
         this.receipts.put(receipt.getSerialNumber(), receipt);
@@ -140,7 +160,10 @@ public class Shop implements models.shop.contracts.Shop {
 
         sb.append("--- Information ---\n");
         sb.append(String.format("Receipts: %d | Cashiers: %d | Checkouts: %d | Products: %d\n",
-                this.receipts.size(), this.cashiers.size(), this.checkouts.size(), this.deliveredProducts.size()));
+                this.receipts.size(),
+                this.cashierRepository.getAll().size(),
+                this.checkoutRepository.getAll().size(),
+                this.deliveredProductRepository.getAll().size()));
 
         sb.append("\n");
 
@@ -154,20 +177,20 @@ public class Shop implements models.shop.contracts.Shop {
 
         sb.append("--- Cashiers Information ---\n");
 
-        if (this.cashiers.isEmpty()) {
+        if (this.cashierRepository.getAll().isEmpty()) {
             sb.append("No Available Cashiers!\n");
         } else {
-            this.cashiers.values().forEach(c -> sb.append(c.toString()));
+            this.cashierRepository.getAll().forEach(c -> sb.append(c.toString()));
         }
 
         sb.append("\n");
 
         sb.append("--- Products Information ---\n");
 
-        if (this.deliveredProducts.isEmpty()) {
+        if (this.deliveredProductRepository.getAll().isEmpty()) {
             sb.append("No Available Products!\n");
         } else {
-            this.deliveredProducts.values().forEach(e -> sb.append(e.toString()));
+            this.deliveredProductRepository.getAll().forEach(e -> sb.append(e.toString()));
         }
 
         return sb.toString().trim();

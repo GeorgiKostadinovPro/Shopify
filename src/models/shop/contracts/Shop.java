@@ -7,6 +7,7 @@ import models.receipts.Receipt;
 import java.math.BigDecimal;
 
 public interface Shop {
+    int getId();
     int getTotalReceipts();
 
     BigDecimal calculateTotalCashierSalariesExpenses();
@@ -15,10 +16,10 @@ public interface Shop {
     BigDecimal calculateTotalGeneralIncome();
 
     void addCashier(Cashier _cashier);
-    void removeCashier(Integer _cashierId);
+    void removeCashier(int _cashierId);
 
     void addCheckout();
-    void removeCheckout(Integer _checkoutId);
+    void removeCheckout(int _checkoutId);
 
     Receipt processCheckout(Client _client);
 }

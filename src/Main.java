@@ -4,7 +4,7 @@ import models.products.FoodProduct;
 import models.products.NonFoodProduct;
 import models.receipts.Receipt;
 import models.shop.contracts.Shop;
-import utilities.FileService;
+import repositories.ClientRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,10 +32,15 @@ public class Main {
 
         Client client = new models.clients.Client(1, "George", BigDecimal.valueOf(60000));
 
+        ClientRepository clientRepository = new ClientRepository();
+        clientRepository.add(client);
+
         client.getCart().addProduct(p1, 10);
         client.getCart().addProduct(p2, 20);
 
-        Shop shop = new models.shop.Shop("Walmart");
+        System.out.println(clientRepository.getById(1));
+
+        Shop shop = new models.shop.Shop(1,"Walmart");
 
         shop.addCashier(new Cashier(1, "Lyubo", BigDecimal.valueOf(2000)));
         shop.addCashier(new Cashier(2, "Kriso", BigDecimal.valueOf(2100)));
