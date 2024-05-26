@@ -9,6 +9,7 @@ import models.checkouts.contracts.Checkout;
 import models.clients.contracts.Client;
 import models.products.contracts.Product;
 import models.receipts.Receipt;
+import repositories.CashierRepository;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
@@ -19,13 +20,13 @@ public class Shop implements models.shop.contracts.Shop {
     private String name;
 
     private final Map<String, Receipt> receipts;
-    private final Map<Integer, Cashier> cashiers;
+    private final CashierRepository cashiersRepository;
     private final Map<Integer, Checkout> checkouts;
     private final Map<Integer, Product> deliveredProducts;
 
     private Shop() {
         this.receipts = new HashMap<>();
-        this.cashiers = new HashMap<>();
+        this.cashiersRepository = new CashierRepository();
         this.checkouts = new HashMap<>();
         this.deliveredProducts = new HashMap<>();
     }
@@ -49,8 +50,8 @@ public class Shop implements models.shop.contracts.Shop {
     }
 
     public BigDecimal calculateTotalCashierSalariesExpenses() {
-        return this.cashiers
-                .values()
+        return this.cashiersRepository
+                .getAll()
                 .stream()
                 .map(Cashier::getMonthlySalary)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -81,21 +82,19 @@ public class Shop implements models.shop.contracts.Shop {
     }
 
     public void addCashier(Cashier _cashier) {
-        int cashierId = _cashier.getId();
-
-        if (this.cashiers.containsKey(cashierId)) {
+        if (this.cashiersRepository.getById(_cashier.getId()) != null) {
             throw new ExistingCashierException(ExceptionMessages.CASHIER_ALREADY_EXISTS);
         }
 
-        this.cashiers.put(cashierId, _cashier);
+        this.cashiersRepository.add(_cashier);
     }
 
-    public void removeCashier(Integer _cashierId) {
-        if (!this.cashiers.containsKey(_cashierId)) {
+    public void removeCashier(int _cashierId) {
+        if (this.cashiersRepository.getById(_cashierId) == null) {
             throw new CashierNotExistException(ExceptionMessages.CASHIER_NOT_PRESENTED);
         }
 
-        this.cashiers.remove(_cashierId);
+        this.cashiersRepository.remove(_cashierId);
     }
 
     public void addCheckout() {
@@ -104,7 +103,7 @@ public class Shop implements models.shop.contracts.Shop {
         this.checkouts.put(checkoutId, checkout);
     }
 
-    public void removeCheckout(Integer _checkoutId) {
+    public void removeCheckout(int _checkoutId) {
         if (!this.checkouts.containsKey(_checkoutId)) {
             throw new CheckoutNotExistException(ExceptionMessages.CHECKOUT_NOT_PRESENTED);
         }
@@ -117,12 +116,12 @@ public class Shop implements models.shop.contracts.Shop {
             throw new UnsupportedOperationException(ExceptionMessages.NO_AVAILABLE_CHECKOUTS);
         }
 
-        if (this.cashiers.isEmpty()) {
+        if (this.cashiersRepository.getAll().isEmpty()) {
             throw new UnsupportedOperationException(ExceptionMessages.NO_AVAILABLE_CASHIERS);
         }
 
         Checkout checkout = this.checkouts.values().stream().findFirst().get();
-        Cashier cashier = this.cashiers.values().stream().findFirst().get();
+        Cashier cashier = this.cashiersRepository.getAll().stream().findAny().get();
 
         Receipt receipt = checkout.processPayment(cashier, _client);
         this.receipts.put(receipt.getSerialNumber(), receipt);
@@ -140,7 +139,7 @@ public class Shop implements models.shop.contracts.Shop {
 
         sb.append("--- Information ---\n");
         sb.append(String.format("Receipts: %d | Cashiers: %d | Checkouts: %d | Products: %d\n",
-                this.receipts.size(), this.cashiers.size(), this.checkouts.size(), this.deliveredProducts.size()));
+                this.receipts.size(), this.cashiersRepository.getAll().size(), this.checkouts.size(), this.deliveredProducts.size()));
 
         sb.append("\n");
 
@@ -154,10 +153,10 @@ public class Shop implements models.shop.contracts.Shop {
 
         sb.append("--- Cashiers Information ---\n");
 
-        if (this.cashiers.isEmpty()) {
+        if (this.cashiersRepository.getAll().isEmpty()) {
             sb.append("No Available Cashiers!\n");
         } else {
-            this.cashiers.values().forEach(c -> sb.append(c.toString()));
+            this.cashiersRepository.getAll().forEach(c -> sb.append(c.toString()));
         }
 
         sb.append("\n");
