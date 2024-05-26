@@ -5,6 +5,9 @@ public class ExceptionMessages {
     public static final String INVALID_IDENTIFIER = "Id must be greater than 0!";
     public static final String INVALID_NAME = "Name must NOT be empty!";
 
+    // Shop
+    public static final String INVALID_SHOP_ID = "Shop with such ID is NOT registered!";
+
     // Cashier
     public static final String INVALID_MONTHLY_SALARY = "Monthly salary must be greater than 0!";
     public static final String CASHIER_ALREADY_EXISTS = "Cashier with such Id is already presented!";
