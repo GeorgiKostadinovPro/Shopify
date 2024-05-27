@@ -8,6 +8,7 @@ import models.shop.contracts.Shop;
 import repositories.ShopRepository;
 
 public class ControllerImpl implements Controller {
+    // In each shop we have - (productRepo, cashierRepo, clientRepo, checkoutRepo, receiptRepo)
     private final ShopRepository shopRepository;
 
     public ControllerImpl() {
@@ -27,7 +28,15 @@ public class ControllerImpl implements Controller {
 
     @Override
     public String removeShop(String[] args) {
-        return "";
+        Shop shop = this.shopRepository.getById(Integer.parseInt(args[0]));
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        this.shopRepository.remove(shop.getId());
+
+        return String.format(OutputMessages.SUCCESSFULLY_REMOVED_SHOP, shop.getShortInfo());
     }
 
     @Override
@@ -71,12 +80,12 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public String addProductsToCart(String[] args) {
+    public String addProductToCart(String[] args) {
         return "";
     }
 
     @Override
-    public String removeProductsFromCart(String[] args) {
+    public String removeProductFromCart(String[] args) {
         return "";
     }
 
@@ -106,7 +115,7 @@ public class ControllerImpl implements Controller {
 
         StringBuilder sb = new StringBuilder();
 
-        this.shopRepository.getAll().forEach(s -> sb.append(s.toString()).append("\n"));
+        this.shopRepository.getAll().forEach(s -> sb.append(s.getShortInfo()).append("\n"));
 
         return sb.toString().trim();
     }
