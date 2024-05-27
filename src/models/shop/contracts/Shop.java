@@ -20,7 +20,7 @@ public interface Shop {
     void addProduct(Product _product);
     void removeProduct(int _productId);
 
-    void addCashier(Cashier _cashier);
+    void addCashier(String _name, BigDecimal _monthlySalary);
     void removeCashier(int _cashierId);
 
     void addCheckout();
