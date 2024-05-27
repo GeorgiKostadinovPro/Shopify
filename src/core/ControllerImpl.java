@@ -85,12 +85,33 @@ public class ControllerImpl implements Controller {
 
     @Override
     public String addCheckoutToShop(String[] args) {
-        return "";
+        int shopId = Integer.parseInt(args[0]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        shop.addCheckout();
+
+        return String.format(OutputMessages.SUCCESSFULLY_ADDED_CHECKOUT, shop.getShortInfo());
     }
 
     @Override
     public String removeCheckoutFromShop(String[] args) {
-        return "";
+        int shopId = Integer.parseInt(args[0]);
+        int checkoutId = Integer.parseInt(args[1]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        shop.removeCheckout(checkoutId);
+
+        return String.format(OutputMessages.SUCCESSFULLY_REMOVED_CHECKOUT, checkoutId, shop.getShortInfo());
     }
 
     @Override

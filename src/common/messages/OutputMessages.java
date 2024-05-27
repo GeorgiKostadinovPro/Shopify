@@ -14,6 +14,10 @@ public class OutputMessages {
     public static final String SUCCESSFULLY_ADDED_CASHIER = "Successfully added cashier - %s to shop - %s.";
     public static final String SUCCESSFULLY_REMOVED_CASHIER = "Successfully removed cashier with Id=%d from shop - %s.";
 
+    // Checkout
+    public static final String SUCCESSFULLY_ADDED_CHECKOUT = "Successfully added checkout to shop - %s.";
+    public static final String SUCCESSFULLY_REMOVED_CHECKOUT = "Successfully removed checkout with Id=%d from shop - %s.";
+
     public static final String[] AVAILABLE_COMMANDS = {
             "RegisterShop {shopName}",
             "RemoveShop {shopId}",
