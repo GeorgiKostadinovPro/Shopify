@@ -97,6 +97,23 @@ public class Shop implements models.shop.contracts.Shop {
         return totalIncomeFromSoldProducts.subtract(totalShopCostForCashiersAndDelivery);
     }
 
+    public void addProduct(Product _product) {
+        if (this.productRepository.getById(_product.getId()) != null
+                || this.productRepository.getAll().stream().anyMatch(p -> p.getName().equals(_product.getName()))) {
+            throw new ExistingProductException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
+        }
+
+        this.productRepository.add(_product);
+    }
+
+    public void removeProduct(int _productId) {
+        if (this.productRepository.getById(_productId) == null) {
+            throw new ProductNotExistException(ExceptionMessages.INVALID_PRODUCT_ID);
+        }
+
+        this.checkoutRepository.remove(_productId);
+    }
+
     public void addCashier(Cashier _cashier) {
         if (this.cashierRepository.getById(_cashier.getId()) != null) {
             throw new ExistingCashierException(ExceptionMessages.CASHIER_ALREADY_EXISTS);
@@ -127,23 +144,6 @@ public class Shop implements models.shop.contracts.Shop {
         this.checkoutRepository.remove(_checkoutId);
     }
 
-    public void addProduct(Product _product) {
-        if (this.productRepository.getById(_product.getId()) != null
-        || this.productRepository.getAll().stream().anyMatch(p -> p.getName().equals(_product.getName()))) {
-            throw new ExistingProductException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
-        }
-
-        this.productRepository.add(_product);
-    }
-
-    public void removeProduct(int _productId) {
-        if (this.productRepository.getById(_productId) == null) {
-            throw new ProductNotExistException(ExceptionMessages.INVALID_PRODUCT_ID);
-        }
-
-        this.checkoutRepository.remove(_productId);
-    }
-
     public Receipt processCheckout(Client _client) {
         Checkout checkout = this.checkoutRepository
                 .getAll().stream().findFirst().orElse(null);
@@ -163,6 +163,10 @@ public class Shop implements models.shop.contracts.Shop {
         this.receipts.put(receipt.getSerialNumber(), receipt);
 
         return receipt;
+    }
+
+    public String getShortInfo() {
+        return String.format("ID: %d, Name: %s", this.id, this.name);
     }
 
     @Override

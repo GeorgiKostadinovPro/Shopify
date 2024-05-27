@@ -1,5 +1,6 @@
 package core;
 
+import common.messages.OutputMessages;
 import core.contracts.Controller;
 import models.cashiers.Cashier;
 import models.clients.contracts.Client;
@@ -28,22 +29,14 @@ public class StartUp implements Runnable {
     public void run() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(" --- Welcome to Shopify! --- \n");
-        sb.append("1. RegisterShop {shopName} \n");
-        sb.append("2. RemoveShop {shopId} \n");
-        sb.append("4.\n");
-        sb.append("5.\n");
-        sb.append("6.\n");
-        sb.append("7.\n");
-        sb.append("8.\n");
-        sb.append("9.\n");
-        sb.append("10.\n");
-        sb.append("11.\n");
-        sb.append("12.\n");
-        sb.append("13.\n");
-        sb.append("14. GetShopInformation {shopId}\n");
-        sb.append("15. GetAllShops\n");
-        sb.append("16. Stop\n");
+        sb.append(" --- Welcome to Shopify! --- \n").append("\n");
+
+        sb.append(" --- Below are all AVAILABLE commands --- \n");
+
+        for (int i = 0; i < OutputMessages.AVAILABLE_COMMANDS.length; i++) {
+            sb.append(String.format("%d. %s \n", i + 1, OutputMessages.AVAILABLE_COMMANDS[i]));
+        }
+
         sb.append(" --- Please, enjoy your stay! --- \n");
 
         System.out.println(sb);
@@ -84,8 +77,8 @@ public class StartUp implements Runnable {
             case "RemoveCheckoutFromShop" -> this.controller.removeCheckoutFromShop(data);
             case "AddClientToShop" -> this.controller.addClientToShop(data);
             case "RemoveClientFromShop" -> this.controller.removeClientFromShop(data);
-            case "AddProductsToCart" -> this.controller.addProductsToCart(data);
-            case "RemoveProductsFromCart" -> this.controller.removeProductsFromCart(data);
+            case "AddProductToCart" -> this.controller.addProductToCart(data);
+            case "RemoveProductFromCart" -> this.controller.removeProductFromCart(data);
             case "ProcessCheckout" -> controller.processCheckout(data);
             case "GetShopInformation" -> controller.getShopInformation(data);
             case "GetAllShops" -> controller.getAllShops();

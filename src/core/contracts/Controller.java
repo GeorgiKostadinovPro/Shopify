@@ -16,8 +16,8 @@ public interface Controller {
     String addClientToShop(String[] args);
     String removeClientFromShop(String[] args);
 
-    String addProductsToCart(String[] args);
-    String removeProductsFromCart(String[] args);
+    String addProductToCart(String[] args);
+    String removeProductFromCart(String[] args);
 
     String processCheckout(String[] args);
     String getShopInformation(String[] args);
