@@ -52,22 +52,66 @@ public class ControllerImpl implements Controller {
 
     @Override
     public String addCashierToShop(String[] args) {
-        return "";
+        int shopId = Integer.parseInt(args[0]);
+        String name = args[1];
+        BigDecimal monthlySalary = new BigDecimal(args[2]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        shop.addCashier(name, monthlySalary);
+
+        return String.format(OutputMessages.SUCCESSFULLY_ADDED_CASHIER, name, shop.getShortInfo());
     }
 
     @Override
     public String removeCashierFromShop(String[] args) {
-        return "";
+        int shopId = Integer.parseInt(args[0]);
+        int cashierId = Integer.parseInt(args[1]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        shop.removeCashier(cashierId);
+
+        return String.format(OutputMessages.SUCCESSFULLY_REMOVED_CASHIER, cashierId, shop.getShortInfo());
     }
 
     @Override
     public String addCheckoutToShop(String[] args) {
-        return "";
+        int shopId = Integer.parseInt(args[0]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        shop.addCheckout();
+
+        return String.format(OutputMessages.SUCCESSFULLY_ADDED_CHECKOUT, shop.getShortInfo());
     }
 
     @Override
     public String removeCheckoutFromShop(String[] args) {
-        return "";
+        int shopId = Integer.parseInt(args[0]);
+        int checkoutId = Integer.parseInt(args[1]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        shop.removeCheckout(checkoutId);
+
+        return String.format(OutputMessages.SUCCESSFULLY_REMOVED_CHECKOUT, checkoutId, shop.getShortInfo());
     }
 
     @Override

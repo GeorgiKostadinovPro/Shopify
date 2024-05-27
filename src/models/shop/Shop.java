@@ -117,12 +117,10 @@ public class Shop implements models.shop.contracts.Shop {
         this.checkoutRepository.remove(_productId);
     }
 
-    public void addCashier(Cashier _cashier) {
-        if (this.cashierRepository.getById(_cashier.getId()) != null) {
-            throw new ExistingCashierException(ExceptionMessages.CASHIER_ALREADY_EXISTS);
-        }
-
-        this.cashierRepository.add(_cashier);
+    public void addCashier(String _name, BigDecimal _monthlySalary) {
+        int cashierId = this.cashierRepository.getAll().size() + 1;
+        Cashier cashier =  new models.cashiers.Cashier(cashierId, _name, _monthlySalary);
+        this.cashierRepository.add(cashier);
     }
 
     public void removeCashier(int _cashierId) {
@@ -195,7 +193,7 @@ public class Shop implements models.shop.contracts.Shop {
         sb.append("\n");
 
         sb.append("--- Information ---\n");
-        sb.append(String.format("Clients: %d, Products: %d | Cashiers: %d, | Checkouts: %dReceipts: %d\n",
+        sb.append(String.format("Clients: %d, Products: %d | Cashiers: %d, | Checkouts: %d | Receipts: %d\n",
                 this.clientRepository.getAll().size(),
                 this.productRepository.getAll().size(),
                 this.cashierRepository.getAll().size(),

@@ -7,8 +7,16 @@ public class OutputMessages {
     public static final String SUCCESSFULLY_REMOVED_SHOP = "Successfully removed shop - %s from the system.";
 
     // Client
-    public static final String SUCCESSFULLY_ADDED_CLIENT = "Successfully added %s to shop - %s.";
+    public static final String SUCCESSFULLY_ADDED_CLIENT = "Successfully added client - %s to shop - %s.";
     public static final String SUCCESSFULLY_REMOVED_CLIENT = "Successfully removed client with Id=%d from shop - %s.";
+
+    // Cashier
+    public static final String SUCCESSFULLY_ADDED_CASHIER = "Successfully added cashier - %s to shop - %s.";
+    public static final String SUCCESSFULLY_REMOVED_CASHIER = "Successfully removed cashier with Id=%d from shop - %s.";
+
+    // Checkout
+    public static final String SUCCESSFULLY_ADDED_CHECKOUT = "Successfully added checkout to shop - %s.";
+    public static final String SUCCESSFULLY_REMOVED_CHECKOUT = "Successfully removed checkout with Id=%d from shop - %s.";
 
     public static final String[] AVAILABLE_COMMANDS = {
             "RegisterShop {shopName}",
