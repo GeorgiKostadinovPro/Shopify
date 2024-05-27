@@ -7,6 +7,8 @@ import core.contracts.Controller;
 import models.shop.contracts.Shop;
 import repositories.ShopRepository;
 
+import java.math.BigDecimal;
+
 public class ControllerImpl implements Controller {
     private final ShopRepository shopRepository;
 
@@ -70,7 +72,19 @@ public class ControllerImpl implements Controller {
 
     @Override
     public String addClientToShop(String[] args) {
-        return "";
+        int shopId = Integer.parseInt(args[0]);
+        String name = args[1];
+        BigDecimal budget = new BigDecimal(args[2]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        shop.addClient(name, budget);
+
+        return String.format(OutputMessages.SUCCESSFULLY_ADDED_CLIENT, name, shop.getShortInfo());
     }
 
     @Override

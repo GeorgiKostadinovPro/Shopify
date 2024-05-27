@@ -222,6 +222,16 @@ public class Shop implements models.shop.contracts.Shop {
 
         sb.append("\n");
 
+        sb.append("--- Clients Information ---\n");
+
+        if (this.clientRepository.getAll().isEmpty()) {
+            sb.append("No Available Clients!\n");
+        } else {
+            this.clientRepository.getAll().forEach(c -> sb.append(c.toString()).append("\n"));
+        }
+
+        sb.append("\n");
+
         sb.append("--- Products Information ---\n");
 
         if (this.productRepository.getAll().isEmpty()) {

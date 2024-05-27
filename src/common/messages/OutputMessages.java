@@ -2,12 +2,13 @@ package common.messages;
 
 public class OutputMessages {
     // Shop
-    public static final String SUCCESSFULLY_REGISTERED_SHOP = "Successfully registered %s in the system.";
+    public static final String SUCCESSFULLY_REGISTERED_SHOP = "Successfully registered shop - %s in the system.";
     public static final String NO_SHOP_REGISTERED = "There are NOT any shop registered!";
-    public static final String SUCCESSFULLY_REMOVED_SHOP = "Successfully removed %s from the system.";
+    public static final String SUCCESSFULLY_REMOVED_SHOP = "Successfully removed shop - %s from the system.";
 
     // Client
-    public static final String SUCCESSFULLY_REMOVED_CLIENT = "Successfully removed client with Id=%d from %s.";
+    public static final String SUCCESSFULLY_ADDED_CLIENT = "Successfully added %s to shop - %s.";
+    public static final String SUCCESSFULLY_REMOVED_CLIENT = "Successfully removed client with Id=%d from shop - %s.";
 
     public static final String[] AVAILABLE_COMMANDS = {
             "RegisterShop {shopName}",
