@@ -9,6 +9,7 @@ import models.products.contracts.Product;
 import models.receipts.Receipt;
 import repositories.CashierRepository;
 import repositories.CheckoutRepository;
+import repositories.ClientRepository;
 import repositories.ProductRepository;
 import utilities.DecimalFormatter;
 
@@ -22,16 +23,18 @@ public class Shop implements models.shop.contracts.Shop {
 
     private final Map<String, Receipt> receipts;
 
+    private final ClientRepository clientRepository;
+    private final ProductRepository productRepository;
     private final CashierRepository cashierRepository;
     private final CheckoutRepository checkoutRepository;
-    private final ProductRepository productRepository;
 
     private Shop() {
         this.receipts = new HashMap<>();
 
+        this.clientRepository = new ClientRepository();
+        this.productRepository = new ProductRepository();
         this.cashierRepository = new CashierRepository();
         this.checkoutRepository = new CheckoutRepository();
-        this.productRepository = new ProductRepository();
     }
 
     public Shop(int _id, String _name) {
@@ -144,6 +147,20 @@ public class Shop implements models.shop.contracts.Shop {
         this.checkoutRepository.remove(_checkoutId);
     }
 
+    public void addClient(String _name, BigDecimal _budget) {
+        int clientId = this.clientRepository.getAll().size() + 1;
+        Client client = new models.clients.Client(clientId, _name, _budget);
+        this.clientRepository.add(client);
+    }
+
+    public void removeClient(int _clientId) {
+        if (this.clientRepository.getById(_clientId) == null) {
+            throw new ClientNotExistException(ExceptionMessages.CLIENT_NOT_PRESENTED);
+        }
+
+        this.clientRepository.remove(_clientId);
+    }
+
     public Receipt processCheckout(Client _client) {
         Checkout checkout = this.checkoutRepository
                 .getAll().stream().findFirst().orElse(null);
@@ -178,11 +195,12 @@ public class Shop implements models.shop.contracts.Shop {
         sb.append("\n");
 
         sb.append("--- Information ---\n");
-        sb.append(String.format("Receipts: %d | Cashiers: %d | Checkouts: %d | Products: %d\n",
-                this.receipts.size(),
+        sb.append(String.format("Clients: %d, Products: %d | Cashiers: %d, | Checkouts: %dReceipts: %d\n",
+                this.clientRepository.getAll().size(),
+                this.productRepository.getAll().size(),
                 this.cashierRepository.getAll().size(),
                 this.checkoutRepository.getAll().size(),
-                this.productRepository.getAll().size()));
+                this.receipts.size()));
 
         sb.append("\n");
 
@@ -200,6 +218,16 @@ public class Shop implements models.shop.contracts.Shop {
             sb.append("No Available Cashiers!\n");
         } else {
             this.cashierRepository.getAll().forEach(c -> sb.append(c.toString()));
+        }
+
+        sb.append("\n");
+
+        sb.append("--- Clients Information ---\n");
+
+        if (this.clientRepository.getAll().isEmpty()) {
+            sb.append("No Available Clients!\n");
+        } else {
+            this.clientRepository.getAll().forEach(c -> sb.append(c.toString()).append("\n"));
         }
 
         sb.append("\n");

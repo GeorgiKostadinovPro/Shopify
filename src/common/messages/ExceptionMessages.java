@@ -20,6 +20,7 @@ public class ExceptionMessages {
     public static final String NO_AVAILABLE_CHECKOUTS = "Cannot process checkout because there are NO checkouts available!";
 
     // Client
+    public static final String CLIENT_NOT_PRESENTED = "Client with such Id does not exist!";
     public static final String INVALID_BUDGET = "Budget must be greater than 0!";
 
     // Cart
