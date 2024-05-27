@@ -8,7 +8,6 @@ import models.shop.contracts.Shop;
 import repositories.ShopRepository;
 
 public class ControllerImpl implements Controller {
-    // In each shop we have - (productRepo, cashierRepo, clientRepo, checkoutRepo, receiptRepo)
     private final ShopRepository shopRepository;
 
     public ControllerImpl() {
@@ -76,7 +75,18 @@ public class ControllerImpl implements Controller {
 
     @Override
     public String removeClientFromShop(String[] args) {
-        return "";
+        int shopId = Integer.parseInt(args[0]);
+        int clientId = Integer.parseInt(args[1]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        shop.removeClient(clientId);
+
+        return String.format(OutputMessages.SUCCESSFULLY_REMOVED_CLIENT, clientId, shop.getShortInfo());
     }
 
     @Override
