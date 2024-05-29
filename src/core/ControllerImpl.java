@@ -9,6 +9,7 @@ import repositories.ShopRepository;
 import utilities.FileService;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class ControllerImpl implements Controller {
     private final ShopRepository shopRepository;
@@ -43,12 +44,49 @@ public class ControllerImpl implements Controller {
 
     @Override
     public String addProductToShop(String[] args) {
-        return "";
+        int shopId = Integer.parseInt(args[0]);
+        String type = args[1];
+        String name = args[2];
+        int quantity = Integer.parseInt(args[3]);
+        BigDecimal deliveryPrice = new BigDecimal(args[4]);
+        LocalDate expirationDate = LocalDate.parse(args[5]);
+        BigDecimal markupPercentage = new BigDecimal(args[6]);
+        int approachingExpirationDays = Integer.parseInt(args[7]);
+        BigDecimal approachingExpirationDiscount= new BigDecimal(args[8]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        shop.addProduct(
+                type,
+                name,
+                quantity,
+                deliveryPrice,
+                expirationDate,
+                markupPercentage,
+                approachingExpirationDays,
+                approachingExpirationDiscount);
+
+        return String.format(OutputMessages.SUCCESSFULLY_ADDED_PRODUCT, name, shop.getShortInfo());
     }
 
     @Override
     public String removeProductFromShop(String[] args) {
-        return "";
+        int shopId = Integer.parseInt(args[0]);
+        int productId = Integer.parseInt(args[1]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        shop.removeProduct(productId);
+
+        return String.format(OutputMessages.SUCCESSFULLY_REMOVED_PRODUCT, productId, shop.getShortInfo());
     }
 
     @Override

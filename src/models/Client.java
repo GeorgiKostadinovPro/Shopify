@@ -51,7 +51,7 @@ public class Client implements models.contracts.Client {
 
     @Override
     public String toString() {
-        return "Client [id: " + this.id + ", name: " + this.name + ", budget: $" + DecimalFormatter.format(this.budget) + "]";
+        return "Client: " + this.name + " (ID: " + this.id + ") has a budget of: $" + DecimalFormatter.format(this.budget) + "\n";
     }
 
     private void setId(int _id) {
