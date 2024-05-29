@@ -4,7 +4,7 @@ import common.exceptions.ShopNotExistException;
 import common.messages.ExceptionMessages;
 import common.messages.OutputMessages;
 import core.contracts.Controller;
-import models.shop.contracts.Shop;
+import models.contracts.Shop;
 import repositories.ShopRepository;
 
 import java.math.BigDecimal;
@@ -21,7 +21,7 @@ public class ControllerImpl implements Controller {
         String shopName = args[0];
         int shopId = this.shopRepository.getAll().size() + 1;
 
-        Shop shop = new models.shop.Shop(shopId, shopName);
+        Shop shop = new models.Shop(shopId, shopName);
         this.shopRepository.add(shop);
 
         return String.format(OutputMessages.SUCCESSFULLY_REGISTERED_SHOP, shopName);

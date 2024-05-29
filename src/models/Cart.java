@@ -1,9 +1,9 @@
-package models.carts;
+package models;
 
 import common.exceptions.InsufficientQuantityException;
 import common.exceptions.ProductNotExistException;
 import common.messages.ExceptionMessages;
-import models.products.contracts.Product;
+import models.contracts.Product;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
@@ -31,12 +31,16 @@ public class Cart {
         return this.id;
     }
 
-    private void setId(int _id) {
-        if (_id <= 0) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
-        }
+    public void clearCart() {
+        this.cartItems.clear();
+    }
 
-        this.id = _id;
+    public Map<Integer, CartItem> getCartItems() {
+        return this.cartItems;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return this.totalPrice;
     }
 
     public void addProduct(Product product, int desiredQuantity) {
@@ -53,7 +57,7 @@ public class Cart {
         CartItem cartItem;
 
         if (!this.cartItems.containsKey(productId)) {
-            cartItem = new CartItem(productId, this.id, product, desiredQuantity);
+            cartItem = new CartItem(productId, product, desiredQuantity);
             this.cartItems.put(productId, cartItem);
         } else {
             cartItem = this.cartItems.get(productId);
@@ -80,18 +84,6 @@ public class Cart {
         product.increaseQuantity(cartItem.getQuantity());
     }
 
-    public void clearCart() {
-        this.cartItems.clear();
-    }
-
-    public Map<Integer, CartItem> getCartItems() {
-        return this.cartItems;
-    }
-
-    public BigDecimal getTotalPrice() {
-        return this.totalPrice;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -106,5 +98,13 @@ public class Cart {
         sb.append("Total Price: ").append(DecimalFormatter.format(this.getTotalPrice())).append("\n");
 
         return sb.toString().trim();
+    }
+
+    private void setId(int _id) {
+        if (_id <= 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
+        }
+
+        this.id = _id;
     }
 }

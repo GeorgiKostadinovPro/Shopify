@@ -1,10 +1,11 @@
-package models.products.contracts;
+package models.contracts;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public interface Product {
     int getId();
+    String getType();
     String getName();
     int getQuantity();
     void increaseQuantity(int quantity);

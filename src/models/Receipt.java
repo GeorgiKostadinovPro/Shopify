@@ -1,7 +1,6 @@
-package models.receipts;
+package models;
 
-import models.cashiers.contracts.Cashier;
-import models.carts.CartItem;
+import models.contracts.Cashier;
 import utilities.DateFormatter;
 import utilities.DecimalFormatter;
 
@@ -24,21 +23,6 @@ public class Receipt {
         this.cartItems = _cartItems;
         this.totalPrice = _totalPrice;
         this.issuanceDateTime = LocalDateTime.now();
-    }
-
-    private String generateSerialNumber() {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        int length = 10;
-
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < length; i++) {
-            int index = random.nextInt(characters.length());
-            sb.append(characters.charAt(index));
-        }
-
-        return sb.toString().trim();
     }
 
     public String getSerialNumber() {
@@ -65,5 +49,20 @@ public class Receipt {
         sb.append("------------------------------\n");
         sb.append("Total Price: ").append(DecimalFormatter.format(this.totalPrice)).append("\n");
         return sb.toString();
+    }
+
+    private String generateSerialNumber() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        int length = 10;
+
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            sb.append(characters.charAt(index));
+        }
+
+        return sb.toString().trim();
     }
 }

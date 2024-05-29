@@ -1,9 +1,6 @@
-package models.shop.contracts;
+package models.contracts;
 
-import models.cashiers.contracts.Cashier;
-import models.clients.contracts.Client;
-import models.products.contracts.Product;
-import models.receipts.Receipt;
+import models.Receipt;
 
 import java.math.BigDecimal;
 

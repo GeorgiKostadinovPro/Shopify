@@ -1,12 +1,11 @@
-package models.shop;
+package models;
 
 import common.exceptions.*;
 import common.messages.ExceptionMessages;
-import models.cashiers.contracts.Cashier;
-import models.checkouts.contracts.Checkout;
-import models.clients.contracts.Client;
-import models.products.contracts.Product;
-import models.receipts.Receipt;
+import models.contracts.Cashier;
+import models.contracts.Checkout;
+import models.contracts.Client;
+import models.contracts.Product;
 import repositories.CashierRepository;
 import repositories.CheckoutRepository;
 import repositories.ClientRepository;
@@ -17,7 +16,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Shop implements models.shop.contracts.Shop {
+public class Shop implements models.contracts.Shop {
     private int id;
     private String name;
 
@@ -44,30 +43,17 @@ public class Shop implements models.shop.contracts.Shop {
         this.setName(_name);
     }
 
+    @Override
     public int getId() {
         return this.id;
     }
 
-    private void setId(int _id) {
-        if (_id <= 0) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
-        }
-
-        this.id = _id;
-    }
-
-    private void setName(String _name) {
-        if (_name == null || _name.isEmpty()) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_NAME);
-        }
-
-        this.name = _name;
-    }
-
+    @Override
     public int getTotalReceipts() {
         return this.receipts.size();
     }
 
+    @Override
     public BigDecimal calculateTotalCashierSalariesExpenses() {
         return this.cashierRepository
                 .getAll()
@@ -76,6 +62,7 @@ public class Shop implements models.shop.contracts.Shop {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    @Override
     public BigDecimal calculateTotalProductsDeliveryExpenses() {
         return this.productRepository
                 .getAll()
@@ -84,6 +71,7 @@ public class Shop implements models.shop.contracts.Shop {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    @Override
     public BigDecimal calculateTotalIncomeFromSoldProducts() {
         return this.receipts
                 .values()
@@ -92,6 +80,7 @@ public class Shop implements models.shop.contracts.Shop {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    @Override
     public BigDecimal calculateTotalGeneralIncome() {
         BigDecimal totalIncomeFromSoldProducts = this.calculateTotalIncomeFromSoldProducts();
         BigDecimal totalShopCostForCashiersAndDelivery = this.calculateTotalCashierSalariesExpenses()
@@ -100,6 +89,7 @@ public class Shop implements models.shop.contracts.Shop {
         return totalIncomeFromSoldProducts.subtract(totalShopCostForCashiersAndDelivery);
     }
 
+    @Override
     public void addProduct(Product _product) {
         if (this.productRepository.getById(_product.getId()) != null
                 || this.productRepository.getAll().stream().anyMatch(p -> p.getName().equals(_product.getName()))) {
@@ -109,6 +99,7 @@ public class Shop implements models.shop.contracts.Shop {
         this.productRepository.add(_product);
     }
 
+    @Override
     public void removeProduct(int _productId) {
         if (this.productRepository.getById(_productId) == null) {
             throw new ProductNotExistException(ExceptionMessages.INVALID_PRODUCT_ID);
@@ -117,12 +108,14 @@ public class Shop implements models.shop.contracts.Shop {
         this.checkoutRepository.remove(_productId);
     }
 
+    @Override
     public void addCashier(String _name, BigDecimal _monthlySalary) {
         int cashierId = this.cashierRepository.getAll().size() + 1;
-        Cashier cashier =  new models.cashiers.Cashier(cashierId, _name, _monthlySalary);
+        Cashier cashier =  new models.Cashier(cashierId, _name, _monthlySalary);
         this.cashierRepository.add(cashier);
     }
 
+    @Override
     public void removeCashier(int _cashierId) {
         if (this.cashierRepository.getById(_cashierId) == null) {
             throw new CashierNotExistException(ExceptionMessages.CASHIER_NOT_PRESENTED);
@@ -131,12 +124,14 @@ public class Shop implements models.shop.contracts.Shop {
         this.cashierRepository.remove(_cashierId);
     }
 
+    @Override
     public void addCheckout() {
         int checkoutId = this.checkoutRepository.getAll().size() + 1;
-        Checkout checkout = new models.checkouts.Checkout(checkoutId);
+        Checkout checkout = new models.Checkout(checkoutId);
         this.checkoutRepository.add(checkout);
     }
 
+    @Override
     public void removeCheckout(int _checkoutId) {
         if (this.checkoutRepository.getById(_checkoutId) == null) {
             throw new CheckoutNotExistException(ExceptionMessages.CHECKOUT_NOT_PRESENTED);
@@ -145,12 +140,14 @@ public class Shop implements models.shop.contracts.Shop {
         this.checkoutRepository.remove(_checkoutId);
     }
 
+    @Override
     public void addClient(String _name, BigDecimal _budget) {
         int clientId = this.clientRepository.getAll().size() + 1;
-        Client client = new models.clients.Client(clientId, _name, _budget);
+        Client client = new models.Client(clientId, _name, _budget);
         this.clientRepository.add(client);
     }
 
+    @Override
     public void removeClient(int _clientId) {
         if (this.clientRepository.getById(_clientId) == null) {
             throw new ClientNotExistException(ExceptionMessages.CLIENT_NOT_PRESENTED);
@@ -159,6 +156,7 @@ public class Shop implements models.shop.contracts.Shop {
         this.clientRepository.remove(_clientId);
     }
 
+    @Override
     public Receipt processCheckout(Client _client) {
         Checkout checkout = this.checkoutRepository
                 .getAll().stream().findFirst().orElse(null);
@@ -180,6 +178,7 @@ public class Shop implements models.shop.contracts.Shop {
         return receipt;
     }
 
+    @Override
     public String getShortInfo() {
         return String.format("ID: %d, Name: %s", this.id, this.name);
     }
@@ -239,5 +238,21 @@ public class Shop implements models.shop.contracts.Shop {
         }
 
         return sb.toString().trim();
+    }
+
+    private void setId(int _id) {
+        if (_id <= 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
+        }
+
+        this.id = _id;
+    }
+
+    private void setName(String _name) {
+        if (_name == null || _name.isEmpty()) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_NAME);
+        }
+
+        this.name = _name;
     }
 }

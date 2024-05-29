@@ -1,6 +1,6 @@
 package repositories;
 
-import models.shop.contracts.Shop;
+import models.contracts.Shop;
 import repositories.contracts.Repository;
 
 import java.util.*;

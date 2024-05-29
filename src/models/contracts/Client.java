@@ -1,6 +1,6 @@
-package models.clients.contracts;
+package models.contracts;
 
-import models.carts.Cart;
+import models.Cart;
 
 import java.math.BigDecimal;
 

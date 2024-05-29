@@ -1,7 +1,7 @@
-package models.carts;
+package models;
 
 import common.messages.ExceptionMessages;
-import models.products.contracts.Product;
+import models.contracts.Product;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
@@ -11,9 +11,8 @@ public class CartItem {
     private Product product;
     private int quantity;
 
-    public CartItem(int _id, int _cartId, Product _product, int _quantity) {
+    public CartItem(int _id, Product _product, int _quantity) {
         this.setId(_id);
-        this.setId(_cartId);
         this.setProduct(_product);
         this.setQuantity(_quantity);
     }
@@ -22,24 +21,8 @@ public class CartItem {
         return this.id;
     }
 
-    public void setId(int _id) {
-        if (_id <= 0) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
-        }
-
-        this.id = _id;
-    }
-
     public Product getProduct() {
         return this.product;
-    }
-
-    private void setProduct(Product _product) {
-        if (_product == null) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_PRODUCT);
-        }
-
-        this.product = _product;
     }
 
     public int getQuantity() {
@@ -70,5 +53,21 @@ public class CartItem {
                 .append(DecimalFormatter.format(this.getItemTotalPrice())).append(") ");
 
         return sb.toString().trim();
+    }
+
+    private void setId(int _id) {
+        if (_id <= 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
+        }
+
+        this.id = _id;
+    }
+
+    private void setProduct(Product _product) {
+        if (_product == null) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_PRODUCT);
+        }
+
+        this.product = _product;
     }
 }

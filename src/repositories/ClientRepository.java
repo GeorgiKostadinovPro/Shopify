@@ -1,6 +1,6 @@
 package repositories;
 
-import models.clients.contracts.Client;
+import models.contracts.Client;
 import repositories.contracts.Repository;
 
 import java.util.*;
