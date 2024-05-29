@@ -3,6 +3,7 @@ package models.contracts;
 import models.Receipt;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public interface Shop {
     int getId();
@@ -14,7 +15,14 @@ public interface Shop {
     BigDecimal calculateTotalIncomeFromSoldProducts();
     BigDecimal calculateTotalGeneralIncome();
 
-    void addProduct(Product _product);
+    void addProduct(String type,
+                    String _name,
+                    int _quantity,
+                    BigDecimal _deliveryPrice,
+                    LocalDate _expirationDate,
+                    BigDecimal _markupPercentage,
+                    int _approachingExpirationDays,
+                    BigDecimal _approachingExpirationDiscount);
     void removeProduct(int _productId);
 
     void addCashier(String _name, BigDecimal _monthlySalary);

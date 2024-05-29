@@ -70,9 +70,10 @@ public class StartUp implements Runnable {
             case "RemoveClientFromShop" -> this.controller.removeClientFromShop(data);
             case "AddProductToCart" -> this.controller.addProductToCart(data);
             case "RemoveProductFromCart" -> this.controller.removeProductFromCart(data);
-            case "ProcessCheckout" -> controller.processCheckout(data);
-            case "GetShopInformation" -> controller.getShopInformation(data);
-            case "GetAllShops" -> controller.getAllShops();
+            case "ProcessCheckout" -> this.controller.processCheckout(data);
+            case "GetReceiptInformation" -> this.controller.getReceiptInformation(data);
+            case "GetShopInformation" -> this.controller.getShopInformation(data);
+            case "GetAllShops" -> this.controller.getAllShops();
             case "Stop" -> command;
             default -> result;
         };

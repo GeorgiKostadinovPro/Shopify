@@ -13,6 +13,7 @@ import repositories.ProductRepository;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,13 +91,35 @@ public class Shop implements models.contracts.Shop {
     }
 
     @Override
-    public void addProduct(Product _product) {
-        if (this.productRepository.getById(_product.getId()) != null
-                || this.productRepository.getAll().stream().anyMatch(p -> p.getName().equals(_product.getName()))) {
+    public void addProduct(
+            String _type,
+            String _name,
+            int _quantity,
+            BigDecimal _deliveryPrice,
+            LocalDate _expirationDate,
+            BigDecimal _markupPercentage,
+            int _approachingExpirationDays,
+            BigDecimal _approachingExpirationDiscount
+    ) {
+
+        if (this.productRepository.getAll().stream().anyMatch(p -> p.getName().equals(_name))) {
             throw new ExistingProductException(ExceptionMessages.PRODUCT_ALREADY_EXISTS);
         }
 
-        this.productRepository.add(_product);
+        int productId = this.productRepository.getAll().size() + 1;
+
+        Product product = new models.Product(
+                productId,
+                _type,
+                _name,
+                _quantity,
+                _deliveryPrice,
+                _expirationDate,
+                _markupPercentage,
+                _approachingExpirationDays,
+                _approachingExpirationDiscount);
+
+        this.productRepository.add(product);
     }
 
     @Override
@@ -105,7 +128,7 @@ public class Shop implements models.contracts.Shop {
             throw new ProductNotExistException(ExceptionMessages.INVALID_PRODUCT_ID);
         }
 
-        this.checkoutRepository.remove(_productId);
+        this.productRepository.remove(_productId);
     }
 
     @Override
@@ -192,7 +215,7 @@ public class Shop implements models.contracts.Shop {
         sb.append("\n");
 
         sb.append("--- Information ---\n");
-        sb.append(String.format("Clients: %d, Products: %d | Cashiers: %d, | Checkouts: %d | Receipts: %d\n",
+        sb.append(String.format("Clients: %d | Products: %d | Cashiers: %d | Checkouts: %d | Receipts: %d\n",
                 this.clientRepository.getAll().size(),
                 this.productRepository.getAll().size(),
                 this.cashierRepository.getAll().size(),

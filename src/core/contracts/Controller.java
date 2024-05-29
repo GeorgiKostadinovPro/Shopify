@@ -20,6 +20,8 @@ public interface Controller {
     String removeProductFromCart(String[] args);
 
     String processCheckout(String[] args);
+
+    String getReceiptInformation(String[] args);
     String getShopInformation(String[] args);
     String getAllShops();
 }
