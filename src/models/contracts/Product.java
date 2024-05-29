@@ -1,4 +1,4 @@
-package models.products.contracts;
+package models.contracts;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

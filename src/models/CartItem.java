@@ -1,7 +1,7 @@
-package models.carts;
+package models;
 
 import common.messages.ExceptionMessages;
-import models.products.contracts.Product;
+import models.contracts.Product;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;

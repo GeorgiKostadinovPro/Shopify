@@ -1,6 +1,6 @@
 package repositories;
 
-import models.checkouts.contracts.Checkout;
+import models.contracts.Checkout;
 import repositories.contracts.Repository;
 
 import java.util.*;

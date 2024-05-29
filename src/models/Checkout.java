@@ -1,18 +1,15 @@
-package models.checkouts;
+package models;
 
 import common.exceptions.InsufficientPaymentException;
 
 import common.messages.ExceptionMessages;
-import models.carts.Cart;
-import models.carts.CartItem;
-import models.cashiers.contracts.Cashier;
-import models.clients.contracts.Client;
-import models.receipts.Receipt;
+import models.contracts.Cashier;
+import models.contracts.Client;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Checkout implements models.checkouts.contracts.Checkout {
+public class Checkout implements models.contracts.Checkout {
     private int id;
 
     public Checkout(int _id) {

@@ -1,31 +1,44 @@
-package models.products;
+package models;
 
 import common.messages.ExceptionMessages;
+import models.enums.ProductType;
 import utilities.DateFormatter;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public abstract class Product implements models.products.contracts.Product {
+public class Product implements models.contracts.Product {
     private int id;
+    private ProductType type;
     private String name;
     private int quantity;
     private BigDecimal deliveryPrice;
     private LocalDate expirationDate;
+    private BigDecimal markupPercentage;
+    private int approachingExpirationDays;
+    private BigDecimal approachingExpirationDiscount;
 
     protected Product(
             int _id,
+            String type,
             String _name,
             int _quantity,
             BigDecimal _deliveryPrice,
-            LocalDate _expirationDate)
+            LocalDate _expirationDate,
+            BigDecimal _markupPercentage,
+            int _approachingExpirationDays,
+            BigDecimal _approachingExpirationDiscount)
     {
         this.setId(_id);
+        this.setType(type);
         this.setName(_name);
         this.setQuantity(_quantity);
         this.setDeliveryPrice(_deliveryPrice);
         this.setExpirationDate(_expirationDate);
+        this.setMarkupPercentage(_markupPercentage);
+        this.setApproachingExpirationDays(_approachingExpirationDays);
+        this.setApproachingExpirationDiscount(_approachingExpirationDiscount);
     }
 
     public int getId() {
@@ -38,6 +51,22 @@ public abstract class Product implements models.products.contracts.Product {
         }
 
         this.id = _id;
+    }
+
+    public String getType() {
+        return this.type.toString();
+    }
+
+    private void setType(String _type) {
+        if (_type == null || _type.isEmpty()) {
+            throw new IllegalArgumentException(ExceptionMessages.EMPTY_PRODUCT_TYPE);
+        }
+
+        try {
+            this.type = ProductType.valueOf(_type);
+        } catch (RuntimeException e) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_PRODUCT_TYPE);
+        }
     }
 
     public String getName() {
@@ -84,11 +113,34 @@ public abstract class Product implements models.products.contracts.Product {
         this.quantity -= _quantity;
     }
 
+    private void setMarkupPercentage(BigDecimal _markupPercentage) {
+        if (_markupPercentage.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_MARKUP_PERCENTAGE);
+        }
+
+        this.markupPercentage = _markupPercentage;
+    }
+
+    private void setApproachingExpirationDays(int _approachingExpirationDays) {
+        if (_approachingExpirationDays < 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_APPROACHING_EXPIRATION_DAYS);
+        }
+
+        this.approachingExpirationDays = _approachingExpirationDays;
+    }
+
+    private void setApproachingExpirationDiscount(BigDecimal _approachingExpirationDiscount) {
+        if (_approachingExpirationDiscount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_EXPIRATION_DISCOUNT);
+        }
+
+        this.approachingExpirationDiscount = _approachingExpirationDiscount;
+    }
+
     public BigDecimal getDeliveryPrice() {
         return this.deliveryPrice;
     }
 
-    /*This is the price when we deliver the product in the shop*/
     private void setDeliveryPrice(BigDecimal _deliveryPrice) {
         if (_deliveryPrice == null || _deliveryPrice.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException(ExceptionMessages.INVALID_DELIVERY_PRICE);
@@ -114,15 +166,31 @@ public abstract class Product implements models.products.contracts.Product {
         return currentDate.isAfter(this.expirationDate);
     }
 
-    //This is the price when clients buy the product.
-    // Virtual Method. Descendants have different logic.
     public BigDecimal calculateFinalPrice()
     {
         if (this.isExpired()) {
             throw new IllegalStateException(ExceptionMessages.PRODUCT_ALREADY_EXPIRED);
         }
 
-        return BigDecimal.ZERO;
+        BigDecimal valueToMultiplyPrice = BigDecimal.ONE.add(
+                this.markupPercentage.divide(BigDecimal.valueOf(100))
+        );
+
+        if (this.checkForExpirationDiscount()) {
+            BigDecimal discount = BigDecimal.ONE.subtract(
+                    this.approachingExpirationDiscount.divide(BigDecimal.valueOf(100))
+            );
+
+            return this.getDeliveryPrice().multiply(valueToMultiplyPrice).multiply(discount);
+        }
+
+        return this.getDeliveryPrice().multiply(valueToMultiplyPrice);
+    }
+
+    private boolean checkForExpirationDiscount() {
+        LocalDate currentDate = LocalDate.now();
+
+        return this.getExpirationDate().minusDays(this.approachingExpirationDays).isBefore(currentDate);
     }
 
     @Override
@@ -135,6 +203,12 @@ public abstract class Product implements models.products.contracts.Product {
         sb.append("Quantity: ").append(this.quantity).append("\n");
         sb.append("Delivery Price: $").append(DecimalFormatter.format(this.deliveryPrice)).append("\n");
         sb.append("Expiration Date: ").append(DateFormatter.formatLocalDate(this.expirationDate)).append("\n");
+
+        sb.append(" --- More Information --- ").append("\n");
+        sb.append("Markup Percentage: ").append(this.markupPercentage).append("%\n");
+        sb.append("Expiration Discount: ").append(this.approachingExpirationDiscount).append("%\n");
+        sb.append("Is Discount Applied: ").append(this.checkForExpirationDiscount()).append("\n");
+        sb.append("Total Price: $").append(DecimalFormatter.format(this.calculateFinalPrice())).append("\n");
 
         return sb.toString().trim();
     }

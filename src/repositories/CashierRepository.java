@@ -1,6 +1,6 @@
 package repositories;
 
-import models.cashiers.contracts.Cashier;
+import models.contracts.Cashier;
 import repositories.contracts.Repository;
 
 import java.util.*;

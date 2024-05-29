@@ -1,7 +1,6 @@
-package models.receipts;
+package models;
 
-import models.cashiers.contracts.Cashier;
-import models.carts.CartItem;
+import models.contracts.Cashier;
 import utilities.DateFormatter;
 import utilities.DecimalFormatter;
 

@@ -1,13 +1,12 @@
-package models.clients;
+package models;
 
 import common.exceptions.InsufficientPaymentException;
 import common.messages.ExceptionMessages;
-import models.carts.Cart;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
 
-public class Client implements models.clients.contracts.Client {
+public class Client implements models.contracts.Client {
     private int id;
     private String name;
     private BigDecimal budget;

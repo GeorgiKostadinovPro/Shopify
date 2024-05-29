@@ -1,6 +1,6 @@
 package utilities;
 
-import models.receipts.Receipt;
+import models.Receipt;
 
 import java.io.*;
 

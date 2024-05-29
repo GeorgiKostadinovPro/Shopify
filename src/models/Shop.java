@@ -1,12 +1,11 @@
-package models.shop;
+package models;
 
 import common.exceptions.*;
 import common.messages.ExceptionMessages;
-import models.cashiers.contracts.Cashier;
-import models.checkouts.contracts.Checkout;
-import models.clients.contracts.Client;
-import models.products.contracts.Product;
-import models.receipts.Receipt;
+import models.contracts.Cashier;
+import models.contracts.Checkout;
+import models.contracts.Client;
+import models.contracts.Product;
 import repositories.CashierRepository;
 import repositories.CheckoutRepository;
 import repositories.ClientRepository;
@@ -17,7 +16,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Shop implements models.shop.contracts.Shop {
+public class Shop implements models.contracts.Shop {
     private int id;
     private String name;
 
@@ -119,7 +118,7 @@ public class Shop implements models.shop.contracts.Shop {
 
     public void addCashier(String _name, BigDecimal _monthlySalary) {
         int cashierId = this.cashierRepository.getAll().size() + 1;
-        Cashier cashier =  new models.cashiers.Cashier(cashierId, _name, _monthlySalary);
+        Cashier cashier =  new models.Cashier(cashierId, _name, _monthlySalary);
         this.cashierRepository.add(cashier);
     }
 
@@ -133,7 +132,7 @@ public class Shop implements models.shop.contracts.Shop {
 
     public void addCheckout() {
         int checkoutId = this.checkoutRepository.getAll().size() + 1;
-        Checkout checkout = new models.checkouts.Checkout(checkoutId);
+        Checkout checkout = new models.Checkout(checkoutId);
         this.checkoutRepository.add(checkout);
     }
 
@@ -147,7 +146,7 @@ public class Shop implements models.shop.contracts.Shop {
 
     public void addClient(String _name, BigDecimal _budget) {
         int clientId = this.clientRepository.getAll().size() + 1;
-        Client client = new models.clients.Client(clientId, _name, _budget);
+        Client client = new models.Client(clientId, _name, _budget);
         this.clientRepository.add(client);
     }
 

@@ -43,4 +43,7 @@ public class ExceptionMessages {
     public static final String INVALID_EXPIRATION_DISCOUNT = "Expiration discount cannot be negative!";
 
     public static final String PRODUCT_ALREADY_EXISTS = "Product with such ID or Name already exists!";
+
+    public static final String EMPTY_PRODUCT_TYPE = "Product type must NOT be empty!";
+    public static final String INVALID_PRODUCT_TYPE = "Product type is invalid!";
 }

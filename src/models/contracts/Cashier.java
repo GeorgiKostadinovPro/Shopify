@@ -1,4 +1,4 @@
-package models.cashiers.contracts;
+package models.contracts;
 
 import java.math.BigDecimal;
 
