@@ -16,8 +16,24 @@ public class Cashier implements models.contracts.Cashier {
         this.setMonthlySalary(_monthlySalary);
     }
 
+    @Override
     public int getId() {
         return this.id;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public BigDecimal getMonthlySalary() {
+        return this.monthlySalary;
+    }
+
+    @Override
+    public String toString() {
+        return "Cashier: " + this.name + " (ID: " + this.id + ") has monthly salary: $" + DecimalFormatter.format(this.monthlySalary) + "\n";
     }
 
     private void setId(int _id) {
@@ -28,10 +44,6 @@ public class Cashier implements models.contracts.Cashier {
         this.id = _id;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
     private void setName(String _name) {
         if (_name == null || _name.isEmpty()) {
             throw new IllegalArgumentException(ExceptionMessages.INVALID_NAME);
@@ -40,20 +52,11 @@ public class Cashier implements models.contracts.Cashier {
         this.name = _name;
     }
 
-    public BigDecimal getMonthlySalary() {
-        return this.monthlySalary;
-    }
-
-    public void setMonthlySalary(BigDecimal _monthlySalary) {
+    private void setMonthlySalary(BigDecimal _monthlySalary) {
         if (_monthlySalary == null || _monthlySalary.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException(ExceptionMessages.INVALID_MONTHLY_SALARY);
         }
 
         this.monthlySalary = _monthlySalary;
-    }
-
-    @Override
-    public String toString() {
-        return "Cashier: " + this.name + " (ID: " + this.id + ") has monthly salary: $" + DecimalFormatter.format(this.monthlySalary) + "\n";
     }
 }

@@ -16,18 +16,12 @@ public class Checkout implements models.contracts.Checkout {
         this.setId(_id);
     }
 
+    @Override
     public int getId() {
         return this.id;
     }
 
-    private void setId(int _id) {
-        if (_id <= 0) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
-        }
-
-        this.id = _id;
-    }
-
+    @Override
     public Receipt processPayment(Cashier cashier, Client client) {
         Cart cart = client.getCart();
 
@@ -42,5 +36,13 @@ public class Checkout implements models.contracts.Checkout {
         cart.clearCart();
 
         return new Receipt(cashier, items, totalPrice);
+    }
+
+    private void setId(int _id) {
+        if (_id <= 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_IDENTIFIER);
+        }
+
+        this.id = _id;
     }
 }

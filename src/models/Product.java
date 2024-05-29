@@ -19,7 +19,7 @@ public class Product implements models.contracts.Product {
     private int approachingExpirationDays;
     private BigDecimal approachingExpirationDiscount;
 
-    protected Product(
+    public Product(
             int _id,
             String type,
             String _name,
@@ -41,8 +41,104 @@ public class Product implements models.contracts.Product {
         this.setApproachingExpirationDiscount(_approachingExpirationDiscount);
     }
 
+    @Override
     public int getId() {
         return this.id;
+    }
+
+    @Override
+    public String getType() {
+        return this.type.toString();
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public int getQuantity() {
+        return this.quantity;
+    }
+
+    @Override
+    public BigDecimal getDeliveryPrice() {
+        return this.deliveryPrice;
+    }
+
+    @Override
+    public void increaseQuantity(int _quantity) {
+        if (_quantity <= 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_PRODUCT_QUANTITY);
+        }
+
+        this.quantity += _quantity;
+    }
+
+    @Override
+    public void decreaseQuantity(int _quantity) {
+        if (_quantity <= 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_PRODUCT_QUANTITY);
+        }
+
+        if (this.quantity - _quantity < 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_QUANTITY_AMOUNT_TO_REDUCE);
+        }
+
+        this.quantity -= _quantity;
+    }
+
+    @Override
+    public LocalDate getExpirationDate() {
+        return this.expirationDate;
+    }
+
+    @Override
+    public boolean isExpired() {
+        LocalDate currentDate = LocalDate.now();
+        return currentDate.isAfter(this.expirationDate);
+    }
+
+    @Override
+    public BigDecimal calculateFinalPrice()
+    {
+        if (this.isExpired()) {
+            throw new IllegalStateException(ExceptionMessages.PRODUCT_ALREADY_EXPIRED);
+        }
+
+        BigDecimal valueToMultiplyPrice = BigDecimal.ONE.add(
+                this.markupPercentage.divide(BigDecimal.valueOf(100))
+        );
+
+        if (this.checkForExpirationDiscount()) {
+            BigDecimal discount = BigDecimal.ONE.subtract(
+                    this.approachingExpirationDiscount.divide(BigDecimal.valueOf(100))
+            );
+
+            return this.getDeliveryPrice().multiply(valueToMultiplyPrice).multiply(discount);
+        }
+
+        return this.getDeliveryPrice().multiply(valueToMultiplyPrice);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Product ID: ").append(this.id).append("\n");
+        sb.append("Name: ").append(this.name).append("\n");
+        sb.append("Category: ").append(this.getClass().getSimpleName()).append("\n");
+        sb.append("Quantity: ").append(this.quantity).append("\n");
+        sb.append("Delivery Price: $").append(DecimalFormatter.format(this.deliveryPrice)).append("\n");
+        sb.append("Expiration Date: ").append(DateFormatter.formatLocalDate(this.expirationDate)).append("\n");
+
+        sb.append(" --- More Information --- ").append("\n");
+        sb.append("Markup Percentage: ").append(this.markupPercentage).append("%\n");
+        sb.append("Expiration Discount: ").append(this.approachingExpirationDiscount).append("%\n");
+        sb.append("Is Discount Applied: ").append(this.checkForExpirationDiscount()).append("\n");
+        sb.append("Total Price: $").append(DecimalFormatter.format(this.calculateFinalPrice())).append("\n");
+
+        return sb.toString().trim();
     }
 
     private void setId(int _id) {
@@ -51,10 +147,6 @@ public class Product implements models.contracts.Product {
         }
 
         this.id = _id;
-    }
-
-    public String getType() {
-        return this.type.toString();
     }
 
     private void setType(String _type) {
@@ -69,20 +161,12 @@ public class Product implements models.contracts.Product {
         }
     }
 
-    public String getName() {
-        return this.name;
-    }
-
     private void setName(String _name) {
         if (_name == null || _name.isEmpty()) {
             throw new IllegalArgumentException(ExceptionMessages.INVALID_NAME);
         }
 
         this.name = _name;
-    }
-
-    public int getQuantity() {
-        return this.quantity;
     }
 
     private void setQuantity(int _quantity) {
@@ -93,24 +177,20 @@ public class Product implements models.contracts.Product {
         this.quantity = _quantity;
     }
 
-    public void increaseQuantity(int _quantity) {
-        if (_quantity <= 0) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_PRODUCT_QUANTITY);
+    private void setDeliveryPrice(BigDecimal _deliveryPrice) {
+        if (_deliveryPrice == null || _deliveryPrice.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_DELIVERY_PRICE);
         }
 
-        this.quantity += _quantity;
+        this.deliveryPrice = _deliveryPrice;
     }
 
-    public void decreaseQuantity(int _quantity) {
-        if (_quantity <= 0) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_PRODUCT_QUANTITY);
+    private void setExpirationDate(LocalDate _expirationDate) {
+        if (!_expirationDate.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException(ExceptionMessages.INVALID_EXPIRATION_DATE);
         }
 
-        if (this.quantity - _quantity < 0) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_QUANTITY_AMOUNT_TO_REDUCE);
-        }
-
-        this.quantity -= _quantity;
+        this.expirationDate = _expirationDate;
     }
 
     private void setMarkupPercentage(BigDecimal _markupPercentage) {
@@ -137,79 +217,9 @@ public class Product implements models.contracts.Product {
         this.approachingExpirationDiscount = _approachingExpirationDiscount;
     }
 
-    public BigDecimal getDeliveryPrice() {
-        return this.deliveryPrice;
-    }
-
-    private void setDeliveryPrice(BigDecimal _deliveryPrice) {
-        if (_deliveryPrice == null || _deliveryPrice.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_DELIVERY_PRICE);
-        }
-
-        this.deliveryPrice = _deliveryPrice;
-    }
-
-    public LocalDate getExpirationDate() {
-        return this.expirationDate;
-    }
-
-    private void setExpirationDate(LocalDate _expirationDate) {
-        if (!_expirationDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException(ExceptionMessages.INVALID_EXPIRATION_DATE);
-        }
-
-        this.expirationDate = _expirationDate;
-    }
-
-    public boolean isExpired() {
-        LocalDate currentDate = LocalDate.now();
-        return currentDate.isAfter(this.expirationDate);
-    }
-
-    public BigDecimal calculateFinalPrice()
-    {
-        if (this.isExpired()) {
-            throw new IllegalStateException(ExceptionMessages.PRODUCT_ALREADY_EXPIRED);
-        }
-
-        BigDecimal valueToMultiplyPrice = BigDecimal.ONE.add(
-                this.markupPercentage.divide(BigDecimal.valueOf(100))
-        );
-
-        if (this.checkForExpirationDiscount()) {
-            BigDecimal discount = BigDecimal.ONE.subtract(
-                    this.approachingExpirationDiscount.divide(BigDecimal.valueOf(100))
-            );
-
-            return this.getDeliveryPrice().multiply(valueToMultiplyPrice).multiply(discount);
-        }
-
-        return this.getDeliveryPrice().multiply(valueToMultiplyPrice);
-    }
-
     private boolean checkForExpirationDiscount() {
         LocalDate currentDate = LocalDate.now();
 
         return this.getExpirationDate().minusDays(this.approachingExpirationDays).isBefore(currentDate);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("Product ID: ").append(this.id).append("\n");
-        sb.append("Name: ").append(this.name).append("\n");
-        sb.append("Category: ").append(this.getClass().getSimpleName()).append("\n");
-        sb.append("Quantity: ").append(this.quantity).append("\n");
-        sb.append("Delivery Price: $").append(DecimalFormatter.format(this.deliveryPrice)).append("\n");
-        sb.append("Expiration Date: ").append(DateFormatter.formatLocalDate(this.expirationDate)).append("\n");
-
-        sb.append(" --- More Information --- ").append("\n");
-        sb.append("Markup Percentage: ").append(this.markupPercentage).append("%\n");
-        sb.append("Expiration Discount: ").append(this.approachingExpirationDiscount).append("%\n");
-        sb.append("Is Discount Applied: ").append(this.checkForExpirationDiscount()).append("\n");
-        sb.append("Total Price: $").append(DecimalFormatter.format(this.calculateFinalPrice())).append("\n");
-
-        return sb.toString().trim();
     }
 }

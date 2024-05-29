@@ -25,21 +25,6 @@ public class Receipt {
         this.issuanceDateTime = LocalDateTime.now();
     }
 
-    private String generateSerialNumber() {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        int length = 10;
-
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < length; i++) {
-            int index = random.nextInt(characters.length());
-            sb.append(characters.charAt(index));
-        }
-
-        return sb.toString().trim();
-    }
-
     public String getSerialNumber() {
         return this.serialNumber;
     }
@@ -64,5 +49,20 @@ public class Receipt {
         sb.append("------------------------------\n");
         sb.append("Total Price: ").append(DecimalFormatter.format(this.totalPrice)).append("\n");
         return sb.toString();
+    }
+
+    private String generateSerialNumber() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        int length = 10;
+
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            sb.append(characters.charAt(index));
+        }
+
+        return sb.toString().trim();
     }
 }
