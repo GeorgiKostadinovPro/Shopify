@@ -32,6 +32,7 @@ public class OutputMessages {
             "AddProductToCart {shopId} {clientId} {productId} {desiredQuantity}",
             "RemoveProductFromCart {shopId} {clientId} {productId}",
             "ProcessCheckout {clientId}",
+            "GetReceiptInformation {serialNumber}",
             "GetShopInformation {shopId}",
             "GetAllShops",
             "Stop"

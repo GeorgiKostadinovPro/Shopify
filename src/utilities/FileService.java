@@ -32,9 +32,10 @@ public class FileService {
             while ((line = reader.readLine()) != null) {
                 content.append(line).append("\n");
             }
-        } catch (IOException e) {
-            System.err.println("Error reading receipt from file: " + e.getMessage());
+        } catch (Exception e) {
+            throw new UnsupportedOperationException(String.format("Error reading receipt from file: %s", e.getMessage()));
         }
+
         return content.toString();
     }
 }

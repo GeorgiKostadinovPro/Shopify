@@ -6,6 +6,7 @@ import common.messages.OutputMessages;
 import core.contracts.Controller;
 import models.contracts.Shop;
 import repositories.ShopRepository;
+import utilities.FileService;
 
 import java.math.BigDecimal;
 
@@ -160,6 +161,15 @@ public class ControllerImpl implements Controller {
     @Override
     public String processCheckout(String[] args) {
         return "";
+    }
+
+    @Override
+    public String getReceiptInformation(String[] args) {
+        String serialNumber = args[0];
+
+        FileService service = new FileService();
+
+        return service.readReceiptFromFile(serialNumber);
     }
 
     @Override
