@@ -7,8 +7,8 @@ public class OutputMessages {
     public static final String SUCCESSFULLY_REMOVED_SHOP = "Successfully removed shop - %s from the system.";
 
     // Client
-    public static final String SUCCESSFULLY_ADDED_CLIENT = "Successfully added client - %s to shop - %s.";
-    public static final String SUCCESSFULLY_REMOVED_CLIENT = "Successfully removed client with Id=%d from shop - %s.";
+    public static final String SUCCESSFULLY_REGISTERED_CLIENT = "Successfully added client - %s";
+    public static final String SUCCESSFULLY_REMOVED_CLIENT = "Successfully removed client with Id=%d.";
 
     // Cashier
     public static final String SUCCESSFULLY_ADDED_CASHIER = "Successfully added cashier - %s to shop - %s.";
@@ -34,8 +34,8 @@ public class OutputMessages {
             "RemoveCashierFromShop {shopId} {cashierId}",
             "AddCheckoutToShop {shopId}",
             "RemoveCheckoutFromShop {shopId} {checkoutId}",
-            "AddClientToShop {shopId} {name} {budget}",
-            "RemoveClientFromShop {shopId} {clientId}",
+            "RegisterClient {name} {budget}",
+            "RemoveClient {clientId}",
             "AddProductToCart {clientId} {shopId} {productId} {desiredQuantity}",
             "RemoveProductFromCart {clientId} {shopId} {productId}",
             "ProcessCheckout {clientId} {shopId}",

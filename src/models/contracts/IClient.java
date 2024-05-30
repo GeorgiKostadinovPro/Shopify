@@ -4,7 +4,7 @@ import models.Cart;
 
 import java.math.BigDecimal;
 
-public interface Client {
+public interface IClient {
     int getId();
     String getName();
     BigDecimal getBudget();

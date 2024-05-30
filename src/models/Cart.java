@@ -3,7 +3,7 @@ package models;
 import common.exceptions.InsufficientQuantityException;
 import common.exceptions.ProductNotExistException;
 import common.messages.ExceptionMessages;
-import models.contracts.Product;
+import models.contracts.IProduct;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
@@ -43,7 +43,7 @@ public class Cart {
         return this.totalPrice;
     }
 
-    public void addProduct(Product product, int desiredQuantity) {
+    public void addProduct(IProduct product, int desiredQuantity) {
         int productId = product.getId();
 
         if (desiredQuantity > product.getQuantity()) {
@@ -68,7 +68,7 @@ public class Cart {
         this.totalPrice = this.totalPrice.add(cartItem.getItemTotalPrice());
     }
 
-    public void removeProduct(Product product) {
+    public void removeProduct(IProduct product) {
         int productId = product.getId();
 
         if (!this.cartItems.containsKey(productId)) {

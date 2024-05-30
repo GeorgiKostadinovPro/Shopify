@@ -1,19 +1,19 @@
 package repositories;
 
-import models.contracts.Cashier;
+import models.contracts.ICashier;
 import repositories.contracts.Repository;
 
 import java.util.*;
 
-public class CashierRepository implements Repository<Cashier> {
-    private final Map<Integer, Cashier> cashiers;
+public class CashierRepository implements Repository<ICashier> {
+    private final Map<Integer, ICashier> cashiers;
 
     public CashierRepository() {
         this.cashiers = new HashMap<>();
     }
 
     @Override
-    public void add(Cashier entity) {
+    public void add(ICashier entity) {
         this.cashiers.put(entity.getId(), entity);
     }
 
@@ -23,12 +23,12 @@ public class CashierRepository implements Repository<Cashier> {
     }
 
     @Override
-    public Cashier getById(int id) {
+    public ICashier getById(int id) {
         return this.cashiers.get(id);
     }
 
     @Override
-    public Collection<Cashier> getAll() {
+    public Collection<ICashier> getAll() {
         return Collections.unmodifiableCollection(this.cashiers.values());
     }
 }

@@ -1,19 +1,19 @@
 package repositories;
 
-import models.contracts.Client;
+import models.contracts.IClient;
 import repositories.contracts.Repository;
 
 import java.util.*;
 
-public class ClientRepository implements Repository<Client> {
-    private final Map<Integer, Client> clients;
+public class ClientRepository implements Repository<IClient> {
+    private final Map<Integer, IClient> clients;
 
     public ClientRepository() {
         this.clients = new HashMap<>();
     }
 
     @Override
-    public void add(Client entity) {
+    public void add(IClient entity) {
         this.clients.put(entity.getId(), entity);
     }
 
@@ -23,12 +23,12 @@ public class ClientRepository implements Repository<Client> {
     }
 
     @Override
-    public Client getById(int id) {
+    public IClient getById(int id) {
         return this.clients.get(id);
     }
 
     @Override
-    public Collection<Client> getAll() {
+    public Collection<IClient> getAll() {
         return Collections.unmodifiableCollection(this.clients.values());
     }
 }
