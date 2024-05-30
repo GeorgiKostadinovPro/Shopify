@@ -180,7 +180,17 @@ public class Shop implements models.contracts.Shop {
     }
 
     @Override
-    public Receipt processCheckout(Client _client) {
+    public Receipt processCheckout(int _clientId) {
+        Client client = this.clientRepository.getById(_clientId);
+
+        if (client == null) {
+            throw new ClientNotExistException(ExceptionMessages.CLIENT_NOT_PRESENTED);
+        }
+
+        if (client.getCart().getCartItems().isEmpty()) {
+            throw new UnsupportedOperationException(ExceptionMessages.NO_PRODUCTS_TO_BUY);
+        }
+
         Checkout checkout = this.checkoutRepository
                 .getAll().stream().findFirst().orElse(null);
 
@@ -195,7 +205,7 @@ public class Shop implements models.contracts.Shop {
             throw new UnsupportedOperationException(ExceptionMessages.NO_AVAILABLE_CASHIERS);
         }
 
-        Receipt receipt = checkout.processPayment(cashier, _client);
+        Receipt receipt = checkout.processPayment(cashier, client);
         this.receipts.put(receipt.getSerialNumber(), receipt);
 
         return receipt;

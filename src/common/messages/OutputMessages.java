@@ -22,6 +22,9 @@ public class OutputMessages {
     public static final String SUCCESSFULLY_ADDED_PRODUCT = "Successfully added product %s to shop - %s.";
     public static final String SUCCESSFULLY_REMOVED_PRODUCT = "Successfully removed product with Id=%d from shop - %s.";
 
+    // Receipt
+    public static final String SUCCESSFULLY_MADE_PAYMENT = "Client with Id=%d have successfully made payment!\n%s";
+
     public static final String[] AVAILABLE_COMMANDS = {
             "RegisterShop {shopName}",
             "RemoveShop {shopId}",
@@ -33,9 +36,9 @@ public class OutputMessages {
             "RemoveCheckoutFromShop {shopId} {checkoutId}",
             "AddClientToShop {shopId} {name} {budget}",
             "RemoveClientFromShop {shopId} {clientId}",
-            "AddProductToCart {shopId} {clientId} {productId} {desiredQuantity}",
-            "RemoveProductFromCart {shopId} {clientId} {productId}",
-            "ProcessCheckout {clientId}",
+            "AddProductToCart {clientId} {shopId} {productId} {desiredQuantity}",
+            "RemoveProductFromCart {clientId} {shopId} {productId}",
+            "ProcessCheckout {clientId} {shopId}",
             "GetReceiptInformation {serialNumber}",
             "GetShopInformation {shopId}",
             "GetAllShops",

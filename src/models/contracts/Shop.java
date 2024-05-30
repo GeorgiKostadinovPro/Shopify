@@ -34,5 +34,5 @@ public interface Shop {
     void addClient(String _name, BigDecimal _budget);
     void removeClient(int _clientId);
 
-    Receipt processCheckout(Client _client);
+    Receipt processCheckout(int _clientId);
 }

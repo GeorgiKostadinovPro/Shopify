@@ -4,6 +4,7 @@ import common.exceptions.ShopNotExistException;
 import common.messages.ExceptionMessages;
 import common.messages.OutputMessages;
 import core.contracts.Controller;
+import models.Receipt;
 import models.contracts.Shop;
 import repositories.ShopRepository;
 import utilities.FileService;
@@ -11,10 +12,12 @@ import utilities.FileService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class ControllerImpl implements Controller {
+public class ShopController implements Controller {
+    private final FileService fileService;
     private final ShopRepository shopRepository;
 
-    public ControllerImpl() {
+    public ShopController() {
+        this.fileService = new FileService();
         this.shopRepository = new ShopRepository();
     }
 
@@ -188,6 +191,17 @@ public class ControllerImpl implements Controller {
 
     @Override
     public String addProductToCart(String[] args) {
+        int clientId = Integer.parseInt(args[0]);
+        int shopId = Integer.parseInt(args[1]);
+        int productId = Integer.parseInt(args[2]);
+        int desiredQuantity = Integer.parseInt(args[3]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
         return "";
     }
 
@@ -198,16 +212,27 @@ public class ControllerImpl implements Controller {
 
     @Override
     public String processCheckout(String[] args) {
-        return "";
+        int clientId = Integer.parseInt(args[0]);
+        int shopId = Integer.parseInt(args[1]);
+
+        Shop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        Receipt receipt = shop.processCheckout(clientId);
+
+        this.fileService.saveReceiptAsFile(receipt);
+
+        return String.format(OutputMessages.SUCCESSFULLY_MADE_PAYMENT, clientId, receipt);
     }
 
     @Override
     public String getReceiptInformation(String[] args) {
         String serialNumber = args[0];
 
-        FileService service = new FileService();
-
-        return service.readReceiptFromFile(serialNumber);
+        return this.fileService.readReceiptFromFile(serialNumber);
     }
 
     @Override
