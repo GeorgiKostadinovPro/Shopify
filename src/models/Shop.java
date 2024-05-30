@@ -2,13 +2,9 @@ package models;
 
 import common.exceptions.*;
 import common.messages.ExceptionMessages;
-import models.contracts.Cashier;
-import models.contracts.Checkout;
-import models.contracts.Client;
-import models.contracts.Product;
+import models.contracts.*;
 import repositories.CashierRepository;
 import repositories.CheckoutRepository;
-import repositories.ClientRepository;
 import repositories.ProductRepository;
 import utilities.DecimalFormatter;
 
@@ -17,13 +13,12 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Shop implements models.contracts.Shop {
+public class Shop implements IShop {
     private int id;
     private String name;
 
     private final Map<String, Receipt> receipts;
 
-    private final ClientRepository clientRepository;
     private final ProductRepository productRepository;
     private final CashierRepository cashierRepository;
     private final CheckoutRepository checkoutRepository;
@@ -31,7 +26,6 @@ public class Shop implements models.contracts.Shop {
     private Shop() {
         this.receipts = new HashMap<>();
 
-        this.clientRepository = new ClientRepository();
         this.productRepository = new ProductRepository();
         this.cashierRepository = new CashierRepository();
         this.checkoutRepository = new CheckoutRepository();
@@ -50,16 +44,11 @@ public class Shop implements models.contracts.Shop {
     }
 
     @Override
-    public int getTotalReceipts() {
-        return this.receipts.size();
-    }
-
-    @Override
     public BigDecimal calculateTotalCashierSalariesExpenses() {
         return this.cashierRepository
                 .getAll()
                 .stream()
-                .map(Cashier::getMonthlySalary)
+                .map(ICashier::getMonthlySalary)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
@@ -68,7 +57,7 @@ public class Shop implements models.contracts.Shop {
         return this.productRepository
                 .getAll()
                 .stream()
-                .map(Product::getDeliveryPrice)
+                .map(IProduct::getDeliveryPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
@@ -108,7 +97,7 @@ public class Shop implements models.contracts.Shop {
 
         int productId = this.productRepository.getAll().size() + 1;
 
-        Product product = new models.Product(
+        IProduct product = new Product(
                 productId,
                 _type,
                 _name,
@@ -134,7 +123,7 @@ public class Shop implements models.contracts.Shop {
     @Override
     public void addCashier(String _name, BigDecimal _monthlySalary) {
         int cashierId = this.cashierRepository.getAll().size() + 1;
-        Cashier cashier =  new models.Cashier(cashierId, _name, _monthlySalary);
+        ICashier cashier =  new Cashier(cashierId, _name, _monthlySalary);
         this.cashierRepository.add(cashier);
     }
 
@@ -150,7 +139,7 @@ public class Shop implements models.contracts.Shop {
     @Override
     public void addCheckout() {
         int checkoutId = this.checkoutRepository.getAll().size() + 1;
-        Checkout checkout = new models.Checkout(checkoutId);
+        ICheckout checkout = new Checkout(checkoutId);
         this.checkoutRepository.add(checkout);
     }
 
@@ -164,31 +153,15 @@ public class Shop implements models.contracts.Shop {
     }
 
     @Override
-    public void addClient(String _name, BigDecimal _budget) {
-        int clientId = this.clientRepository.getAll().size() + 1;
-        Client client = new models.Client(clientId, _name, _budget);
-        this.clientRepository.add(client);
-    }
-
-    @Override
-    public void removeClient(int _clientId) {
-        if (this.clientRepository.getById(_clientId) == null) {
-            throw new ClientNotExistException(ExceptionMessages.CLIENT_NOT_PRESENTED);
-        }
-
-        this.clientRepository.remove(_clientId);
-    }
-
-    @Override
-    public Receipt processCheckout(Client _client) {
-        Checkout checkout = this.checkoutRepository
+    public Receipt processCheckout(IClient _client) {
+        ICheckout checkout = this.checkoutRepository
                 .getAll().stream().findFirst().orElse(null);
 
         if (checkout == null) {
             throw new UnsupportedOperationException(ExceptionMessages.NO_AVAILABLE_CHECKOUTS);
         }
 
-        Cashier cashier = this.cashierRepository
+        ICashier cashier = this.cashierRepository
                 .getAll().stream().findAny().orElse(null);
 
         if (cashier == null) {
@@ -215,8 +188,7 @@ public class Shop implements models.contracts.Shop {
         sb.append("\n");
 
         sb.append("--- Information ---\n");
-        sb.append(String.format("Clients: %d | Products: %d | Cashiers: %d | Checkouts: %d | Receipts: %d\n",
-                this.clientRepository.getAll().size(),
+        sb.append(String.format("Products: %d | Cashiers: %d | Checkouts: %d | Receipts: %d\n",
                 this.productRepository.getAll().size(),
                 this.cashierRepository.getAll().size(),
                 this.checkoutRepository.getAll().size(),
@@ -238,16 +210,6 @@ public class Shop implements models.contracts.Shop {
             sb.append("No Available Cashiers!\n");
         } else {
             this.cashierRepository.getAll().forEach(c -> sb.append(c.toString()));
-        }
-
-        sb.append("\n");
-
-        sb.append("--- Clients Information ---\n");
-
-        if (this.clientRepository.getAll().isEmpty()) {
-            sb.append("No Available Clients!\n");
-        } else {
-            this.clientRepository.getAll().forEach(c -> sb.append(c.toString()).append("\n"));
         }
 
         sb.append("\n");

@@ -1,19 +1,19 @@
 package repositories;
 
-import models.contracts.Shop;
+import models.contracts.IShop;
 import repositories.contracts.Repository;
 
 import java.util.*;
 
-public class ShopRepository implements Repository<Shop> {
-    private final Map<Integer, Shop> shops;
+public class ShopRepository implements Repository<IShop> {
+    private final Map<Integer, IShop> shops;
 
     public ShopRepository() {
         this.shops = new HashMap<>();
     }
 
     @Override
-    public void add(Shop entity) {
+    public void add(IShop entity) {
         this.shops.put(entity.getId(), entity);
     }
 
@@ -23,12 +23,12 @@ public class ShopRepository implements Repository<Shop> {
     }
 
     @Override
-    public Shop getById(int id) {
+    public IShop getById(int id) {
         return this.shops.get(id);
     }
 
     @Override
-    public Collection<Shop> getAll() {
+    public Collection<IShop> getAll() {
         return Collections.unmodifiableCollection(this.shops.values());
     }
 }

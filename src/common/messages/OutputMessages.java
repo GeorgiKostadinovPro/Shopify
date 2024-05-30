@@ -7,8 +7,8 @@ public class OutputMessages {
     public static final String SUCCESSFULLY_REMOVED_SHOP = "Successfully removed shop - %s from the system.";
 
     // Client
-    public static final String SUCCESSFULLY_ADDED_CLIENT = "Successfully added client - %s to shop - %s.";
-    public static final String SUCCESSFULLY_REMOVED_CLIENT = "Successfully removed client with Id=%d from shop - %s.";
+    public static final String SUCCESSFULLY_REGISTERED_CLIENT = "Successfully added client - %s";
+    public static final String SUCCESSFULLY_REMOVED_CLIENT = "Successfully removed client with Id=%d.";
 
     // Cashier
     public static final String SUCCESSFULLY_ADDED_CASHIER = "Successfully added cashier - %s to shop - %s.";
@@ -22,6 +22,9 @@ public class OutputMessages {
     public static final String SUCCESSFULLY_ADDED_PRODUCT = "Successfully added product %s to shop - %s.";
     public static final String SUCCESSFULLY_REMOVED_PRODUCT = "Successfully removed product with Id=%d from shop - %s.";
 
+    // Receipt
+    public static final String SUCCESSFULLY_MADE_PAYMENT = "Client with Id=%d have successfully made payment!\n%s";
+
     public static final String[] AVAILABLE_COMMANDS = {
             "RegisterShop {shopName}",
             "RemoveShop {shopId}",
@@ -31,11 +34,11 @@ public class OutputMessages {
             "RemoveCashierFromShop {shopId} {cashierId}",
             "AddCheckoutToShop {shopId}",
             "RemoveCheckoutFromShop {shopId} {checkoutId}",
-            "AddClientToShop {shopId} {name} {budget}",
-            "RemoveClientFromShop {shopId} {clientId}",
-            "AddProductToCart {shopId} {clientId} {productId} {desiredQuantity}",
-            "RemoveProductFromCart {shopId} {clientId} {productId}",
-            "ProcessCheckout {clientId}",
+            "RegisterClient {name} {budget}",
+            "RemoveClient {clientId}",
+            "AddProductToCart {clientId} {shopId} {productId} {desiredQuantity}",
+            "RemoveProductFromCart {clientId} {shopId} {productId}",
+            "ProcessCheckout {clientId} {shopId}",
             "GetReceiptInformation {serialNumber}",
             "GetShopInformation {shopId}",
             "GetAllShops",

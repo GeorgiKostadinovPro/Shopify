@@ -2,7 +2,7 @@ package models.contracts;
 
 import java.math.BigDecimal;
 
-public interface Cashier {
+public interface ICashier {
     int getId();
     String getName();
     BigDecimal getMonthlySalary();

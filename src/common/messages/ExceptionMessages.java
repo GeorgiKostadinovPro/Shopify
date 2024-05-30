@@ -27,6 +27,7 @@ public class ExceptionMessages {
     public static final String INVALID_PRODUCT_ID = "Product with such ID does NOT exist!";
     public static final String INSUFFICIENT_QUANTITY
             = "Insufficient quantity of %s. Available quantity: %d. Needed quantity: +%d!";
+    public static final String NO_PRODUCTS_TO_BUY = "There are no products to buy!";
 
     // Product & CartItem
     public static final String INVALID_PRODUCT = "Product CANNOT be null!";

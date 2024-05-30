@@ -1,19 +1,19 @@
 package repositories;
 
-import models.contracts.Checkout;
+import models.contracts.ICheckout;
 import repositories.contracts.Repository;
 
 import java.util.*;
 
-public class CheckoutRepository implements Repository<Checkout> {
-    private final Map<Integer, Checkout> checkouts;
+public class CheckoutRepository implements Repository<ICheckout> {
+    private final Map<Integer, ICheckout> checkouts;
 
     public CheckoutRepository() {
         this.checkouts = new HashMap<>();
     }
 
     @Override
-    public void add(Checkout entity) {
+    public void add(ICheckout entity) {
         this.checkouts.put(entity.getId(), entity);
     }
 
@@ -23,12 +23,12 @@ public class CheckoutRepository implements Repository<Checkout> {
     }
 
     @Override
-    public Checkout getById(int id) {
+    public ICheckout getById(int id) {
         return this.checkouts.get(id);
     }
 
     @Override
-    public Collection<Checkout> getAll() {
+    public Collection<ICheckout> getAll() {
         return Collections.unmodifiableCollection(this.checkouts.values());
     }
 }

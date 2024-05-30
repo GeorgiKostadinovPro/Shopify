@@ -3,13 +3,14 @@ package models;
 import common.exceptions.InsufficientPaymentException;
 
 import common.messages.ExceptionMessages;
-import models.contracts.Cashier;
-import models.contracts.Client;
+import models.contracts.ICashier;
+import models.contracts.IClient;
+import models.contracts.ICheckout;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Checkout implements models.contracts.Checkout {
+public class Checkout implements ICheckout {
     private int id;
 
     public Checkout(int _id) {
@@ -22,7 +23,7 @@ public class Checkout implements models.contracts.Checkout {
     }
 
     @Override
-    public Receipt processPayment(Cashier cashier, Client client) {
+    public Receipt processPayment(ICashier cashier, IClient client) {
         Cart cart = client.getCart();
 
         BigDecimal totalPrice = cart.getTotalPrice();

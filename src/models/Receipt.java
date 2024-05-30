@@ -1,6 +1,6 @@
 package models;
 
-import models.contracts.Cashier;
+import models.contracts.ICashier;
 import utilities.DateFormatter;
 import utilities.DecimalFormatter;
 
@@ -13,10 +13,10 @@ public class Receipt {
     private final String serialNumber;
     private final BigDecimal totalPrice;
     private final LocalDateTime issuanceDateTime;
-    private final Cashier cashier;
+    private final ICashier cashier;
     private final List<CartItem> cartItems;
 
-    public Receipt(Cashier _cashier, List<CartItem> _cartItems, BigDecimal _totalPrice) {
+    public Receipt(ICashier _cashier, List<CartItem> _cartItems, BigDecimal _totalPrice) {
         this.serialNumber = this.generateSerialNumber();
 
         this.cashier = _cashier;

@@ -1,21 +1,31 @@
 package core;
 
+import common.exceptions.ClientNotExistException;
 import common.exceptions.ShopNotExistException;
 import common.messages.ExceptionMessages;
 import common.messages.OutputMessages;
 import core.contracts.Controller;
-import models.contracts.Shop;
+import models.Client;
+import models.Shop;
+import models.contracts.IClient;
+import models.Receipt;
+import models.contracts.IShop;
+import repositories.ClientRepository;
 import repositories.ShopRepository;
 import utilities.FileService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class ControllerImpl implements Controller {
+public class ShopifyController implements Controller {
+    private final FileService fileService;
     private final ShopRepository shopRepository;
+    private final ClientRepository clientRepository;
 
-    public ControllerImpl() {
+    public ShopifyController() {
+        this.fileService = new FileService();
         this.shopRepository = new ShopRepository();
+        this.clientRepository = new ClientRepository();
     }
 
     @Override
@@ -23,7 +33,7 @@ public class ControllerImpl implements Controller {
         String shopName = args[0];
         int shopId = this.shopRepository.getAll().size() + 1;
 
-        Shop shop = new models.Shop(shopId, shopName);
+        IShop shop = new Shop(shopId, shopName);
         this.shopRepository.add(shop);
 
         return String.format(OutputMessages.SUCCESSFULLY_REGISTERED_SHOP, shopName);
@@ -31,7 +41,7 @@ public class ControllerImpl implements Controller {
 
     @Override
     public String removeShop(String[] args) {
-        Shop shop = this.shopRepository.getById(Integer.parseInt(args[0]));
+        IShop shop = this.shopRepository.getById(Integer.parseInt(args[0]));
 
         if (shop == null) {
             throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
@@ -54,7 +64,7 @@ public class ControllerImpl implements Controller {
         int approachingExpirationDays = Integer.parseInt(args[7]);
         BigDecimal approachingExpirationDiscount= new BigDecimal(args[8]);
 
-        Shop shop = this.shopRepository.getById(shopId);
+        IShop shop = this.shopRepository.getById(shopId);
 
         if (shop == null) {
             throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
@@ -78,7 +88,7 @@ public class ControllerImpl implements Controller {
         int shopId = Integer.parseInt(args[0]);
         int productId = Integer.parseInt(args[1]);
 
-        Shop shop = this.shopRepository.getById(shopId);
+        IShop shop = this.shopRepository.getById(shopId);
 
         if (shop == null) {
             throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
@@ -95,7 +105,7 @@ public class ControllerImpl implements Controller {
         String name = args[1];
         BigDecimal monthlySalary = new BigDecimal(args[2]);
 
-        Shop shop = this.shopRepository.getById(shopId);
+        IShop shop = this.shopRepository.getById(shopId);
 
         if (shop == null) {
             throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
@@ -111,7 +121,7 @@ public class ControllerImpl implements Controller {
         int shopId = Integer.parseInt(args[0]);
         int cashierId = Integer.parseInt(args[1]);
 
-        Shop shop = this.shopRepository.getById(shopId);
+        IShop shop = this.shopRepository.getById(shopId);
 
         if (shop == null) {
             throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
@@ -126,7 +136,7 @@ public class ControllerImpl implements Controller {
     public String addCheckoutToShop(String[] args) {
         int shopId = Integer.parseInt(args[0]);
 
-        Shop shop = this.shopRepository.getById(shopId);
+        IShop shop = this.shopRepository.getById(shopId);
 
         if (shop == null) {
             throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
@@ -142,7 +152,7 @@ public class ControllerImpl implements Controller {
         int shopId = Integer.parseInt(args[0]);
         int checkoutId = Integer.parseInt(args[1]);
 
-        Shop shop = this.shopRepository.getById(shopId);
+        IShop shop = this.shopRepository.getById(shopId);
 
         if (shop == null) {
             throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
@@ -154,36 +164,29 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public String addClientToShop(String[] args) {
-        int shopId = Integer.parseInt(args[0]);
-        String name = args[1];
-        BigDecimal budget = new BigDecimal(args[2]);
+    public String registerClient(String[] args) {
+        String name = args[0];
+        BigDecimal budget = new BigDecimal(args[1]);
 
-        Shop shop = this.shopRepository.getById(shopId);
+        int clientId = this.clientRepository.getAll().size() + 1;
 
-        if (shop == null) {
-            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
-        }
+        IClient client = new Client(clientId, name, budget);
+        this.clientRepository.add(client);
 
-        shop.addClient(name, budget);
-
-        return String.format(OutputMessages.SUCCESSFULLY_ADDED_CLIENT, name, shop.getShortInfo());
+        return String.format(OutputMessages.SUCCESSFULLY_REGISTERED_CLIENT, client);
     }
 
     @Override
-    public String removeClientFromShop(String[] args) {
-        int shopId = Integer.parseInt(args[0]);
-        int clientId = Integer.parseInt(args[1]);
+    public String removeClient(String[] args) {
+        int clientId = Integer.parseInt(args[0]);
 
-        Shop shop = this.shopRepository.getById(shopId);
-
-        if (shop == null) {
-            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        if (this.clientRepository.getById(clientId) == null) {
+            throw new ClientNotExistException(ExceptionMessages.CLIENT_NOT_PRESENTED);
         }
 
-        shop.removeClient(clientId);
+        this.clientRepository.remove(clientId);
 
-        return String.format(OutputMessages.SUCCESSFULLY_REMOVED_CLIENT, clientId, shop.getShortInfo());
+        return String.format(OutputMessages.SUCCESSFULLY_REMOVED_CLIENT, clientId);
     }
 
     @Override
@@ -198,23 +201,40 @@ public class ControllerImpl implements Controller {
 
     @Override
     public String processCheckout(String[] args) {
-        return "";
+        int clientId = Integer.parseInt(args[0]);
+        int shopId = Integer.parseInt(args[1]);
+
+        IClient client = this.clientRepository.getById(clientId);
+
+        if (client == null) {
+            throw new ClientNotExistException(ExceptionMessages.CLIENT_NOT_PRESENTED);
+        }
+
+        IShop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        Receipt receipt = shop.processCheckout(client);
+
+        this.fileService.saveReceiptAsFile(receipt);
+
+        return String.format(OutputMessages.SUCCESSFULLY_MADE_PAYMENT, clientId, receipt);
     }
 
     @Override
     public String getReceiptInformation(String[] args) {
         String serialNumber = args[0];
 
-        FileService service = new FileService();
-
-        return service.readReceiptFromFile(serialNumber);
+        return this.fileService.readReceiptFromFile(serialNumber);
     }
 
     @Override
     public String getShopInformation(String[] args) {
         int shopId = Integer.parseInt(args[0]);
 
-        Shop shop = this.shopRepository.getById(shopId);
+        IShop shop = this.shopRepository.getById(shopId);
 
         if (shop == null) {
             throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);

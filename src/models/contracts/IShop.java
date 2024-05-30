@@ -5,9 +5,8 @@ import models.Receipt;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public interface Shop {
+public interface IShop {
     int getId();
-    int getTotalReceipts();
     public String getShortInfo();
 
     BigDecimal calculateTotalCashierSalariesExpenses();
@@ -31,8 +30,5 @@ public interface Shop {
     void addCheckout();
     void removeCheckout(int _checkoutId);
 
-    void addClient(String _name, BigDecimal _budget);
-    void removeClient(int _clientId);
-
-    Receipt processCheckout(Client _client);
+    Receipt processCheckout(IClient _client);
 }

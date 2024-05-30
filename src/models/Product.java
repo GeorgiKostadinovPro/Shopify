@@ -1,6 +1,7 @@
 package models;
 
 import common.messages.ExceptionMessages;
+import models.contracts.IProduct;
 import models.enums.ProductType;
 import utilities.DateFormatter;
 import utilities.DecimalFormatter;
@@ -8,7 +9,7 @@ import utilities.DecimalFormatter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Product implements models.contracts.Product {
+public class Product implements IProduct {
     private int id;
     private ProductType type;
     private String name;

@@ -1,19 +1,19 @@
 package repositories;
 
-import models.contracts.Product;
+import models.contracts.IProduct;
 import repositories.contracts.Repository;
 
 import java.util.*;
 
-public class ProductRepository implements Repository<Product> {
-    private final Map<Integer, Product> products;
+public class ProductRepository implements Repository<IProduct> {
+    private final Map<Integer, IProduct> products;
 
     public ProductRepository() {
         this.products = new HashMap<>();
     }
 
     @Override
-    public void add(Product entity) {
+    public void add(IProduct entity) {
         this.products.put(entity.getId(), entity);
     }
 
@@ -23,12 +23,12 @@ public class ProductRepository implements Repository<Product> {
     }
 
     @Override
-    public Product getById(int id) {
+    public IProduct getById(int id) {
         return this.products.get(id);
     }
 
     @Override
-    public Collection<Product> getAll() {
+    public Collection<IProduct> getAll() {
         return Collections.unmodifiableCollection(this.products.values());
     }
 }

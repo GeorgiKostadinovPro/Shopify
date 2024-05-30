@@ -1,17 +1,17 @@
 package models;
 
 import common.messages.ExceptionMessages;
-import models.contracts.Product;
+import models.contracts.IProduct;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
 
 public class CartItem {
     private int id;
-    private Product product;
+    private IProduct product;
     private int quantity;
 
-    public CartItem(int _id, Product _product, int _quantity) {
+    public CartItem(int _id, IProduct _product, int _quantity) {
         this.setId(_id);
         this.setProduct(_product);
         this.setQuantity(_quantity);
@@ -21,7 +21,7 @@ public class CartItem {
         return this.id;
     }
 
-    public Product getProduct() {
+    public IProduct getProduct() {
         return this.product;
     }
 
@@ -63,7 +63,7 @@ public class CartItem {
         this.id = _id;
     }
 
-    private void setProduct(Product _product) {
+    private void setProduct(IProduct _product) {
         if (_product == null) {
             throw new IllegalArgumentException(ExceptionMessages.INVALID_PRODUCT);
         }

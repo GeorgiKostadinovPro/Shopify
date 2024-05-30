@@ -3,7 +3,7 @@ package models.contracts;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public interface Product {
+public interface IProduct {
     int getId();
     String getType();
     String getName();

@@ -13,8 +13,8 @@ public interface Controller {
     String addCheckoutToShop(String[] args);
     String removeCheckoutFromShop(String[] args);
 
-    String addClientToShop(String[] args);
-    String removeClientFromShop(String[] args);
+    String registerClient(String[] args);
+    String removeClient(String[] args);
 
     String addProductToCart(String[] args);
     String removeProductFromCart(String[] args);

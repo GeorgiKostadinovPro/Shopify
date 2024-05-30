@@ -1,11 +1,12 @@
 package models;
 
 import common.messages.ExceptionMessages;
+import models.contracts.ICashier;
 import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
 
-public class Cashier implements models.contracts.Cashier {
+public class Cashier implements ICashier {
     private int id;
     private String name;
     private BigDecimal monthlySalary;
