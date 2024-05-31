@@ -52,7 +52,18 @@ public class Client implements IClient {
 
     @Override
     public String toString() {
-        return "Client: " + this.name + " (ID: " + this.id + ") has a budget of: $" + DecimalFormatter.format(this.budget) + "\n";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Client: ")
+                .append(this.name)
+                .append(" (ID: ")
+                .append(this.id)
+                .append(") has a budget of: $")
+                .append(DecimalFormatter.format(this.budget)).append("\n");
+
+        sb.append(this.cart);
+
+        return sb.toString().trim();
     }
 
     private void setId(int _id) {

@@ -90,12 +90,16 @@ public class Cart {
 
         sb.append("Cart Information: \n");
 
-        for (CartItem cartItem : this.cartItems.values()) {
-            sb.append(cartItem.toString()).append("\n");
-        }
+        if (this.cartItems.isEmpty()) {
+            sb.append("No cart items found.\n");
+        } else {
+            for (CartItem cartItem : this.cartItems.values()) {
+                sb.append(cartItem.toString()).append("\n");
+            }
 
-        sb.append("-------------------------\n");
-        sb.append("Total Price: ").append(DecimalFormatter.format(this.getTotalPrice())).append("\n");
+            sb.append("-------------------------\n");
+            sb.append("Total Price: ").append(DecimalFormatter.format(this.getTotalPrice())).append("\n");
+        }
 
         return sb.toString().trim();
     }

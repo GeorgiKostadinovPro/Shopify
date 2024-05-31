@@ -10,6 +10,7 @@ import utilities.DecimalFormatter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,11 @@ public class Shop implements IShop {
     @Override
     public int getId() {
         return this.id;
+    }
+
+    @Override
+    public Collection<IProduct> getProducts() {
+        return this.productRepository.getAll();
     }
 
     @Override
