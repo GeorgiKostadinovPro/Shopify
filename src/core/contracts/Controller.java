@@ -15,6 +15,7 @@ public interface Controller {
 
     String registerClient(String[] args);
     String removeClient(String[] args);
+    String getClient(String[] args);
 
     String addProductToCart(String[] args);
     String removeProductFromCart(String[] args);

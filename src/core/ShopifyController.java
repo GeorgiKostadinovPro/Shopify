@@ -1,6 +1,7 @@
 package core;
 
 import common.exceptions.ClientNotExistException;
+import common.exceptions.ProductNotExistException;
 import common.exceptions.ShopNotExistException;
 import common.messages.ExceptionMessages;
 import common.messages.OutputMessages;
@@ -9,6 +10,7 @@ import models.Client;
 import models.Shop;
 import models.contracts.IClient;
 import models.Receipt;
+import models.contracts.IProduct;
 import models.contracts.IShop;
 import repositories.ClientRepository;
 import repositories.ShopRepository;
@@ -190,13 +192,84 @@ public class ShopifyController implements Controller {
     }
 
     @Override
+    public String getClient(String[] args) {
+        int clientId = Integer.parseInt(args[0]);
+
+        IClient client = this.clientRepository.getById(clientId);
+
+        if (client == null) {
+            throw new ClientNotExistException(ExceptionMessages.CLIENT_NOT_PRESENTED);
+        }
+
+        return client.toString();
+    }
+
+    @Override
     public String addProductToCart(String[] args) {
-        return "";
+        int clientId = Integer.parseInt(args[0]);
+        int shopId = Integer.parseInt(args[1]);
+        int productId = Integer.parseInt(args[2]);
+        int desiredQuantity = Integer.parseInt(args[3]);
+
+        IClient client = this.clientRepository.getById(clientId);
+
+        if (client == null) {
+            throw new ClientNotExistException(ExceptionMessages.CLIENT_NOT_PRESENTED);
+        }
+
+        IShop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        IProduct product = shop.getProducts()
+                .stream()
+                .filter(p -> p.getId() == productId)
+                .findFirst()
+                .orElse(null);
+
+        if (product == null) {
+            throw new ProductNotExistException(ExceptionMessages.INVALID_PRODUCT_ID);
+        }
+
+        client.getCart().addProduct(product, desiredQuantity);
+
+        return OutputMessages.SUCCESSFULLY_ADDED_PRODUCT_TO_CART;
     }
 
     @Override
     public String removeProductFromCart(String[] args) {
-        return "";
+        int clientId = Integer.parseInt(args[0]);
+        int shopId = Integer.parseInt(args[1]);
+        int productId = Integer.parseInt(args[2]);
+        int desiredQuantity = Integer.parseInt(args[3]);
+
+        IClient client = this.clientRepository.getById(clientId);
+
+        if (client == null) {
+            throw new ClientNotExistException(ExceptionMessages.CLIENT_NOT_PRESENTED);
+        }
+
+        IShop shop = this.shopRepository.getById(shopId);
+
+        if (shop == null) {
+            throw new ShopNotExistException(ExceptionMessages.INVALID_SHOP_ID);
+        }
+
+        IProduct product = shop.getProducts()
+                .stream()
+                .filter(p -> p.getId() == productId)
+                .findFirst()
+                .orElse(null);
+
+        if (product == null) {
+            throw new ProductNotExistException(ExceptionMessages.INVALID_PRODUCT_ID);
+        }
+
+        client.getCart().removeProduct(product);
+
+        return OutputMessages.SUCCESSFULLY_REMOVED_PRODUCT_FROM_CART;
     }
 
     @Override

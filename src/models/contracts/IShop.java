@@ -4,10 +4,12 @@ import models.Receipt;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
 
 public interface IShop {
     int getId();
     public String getShortInfo();
+    public Collection<IProduct> getProducts();
 
     BigDecimal calculateTotalCashierSalariesExpenses();
     BigDecimal calculateTotalProductsDeliveryExpenses();
