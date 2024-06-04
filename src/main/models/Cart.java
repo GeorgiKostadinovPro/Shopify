@@ -33,6 +33,7 @@ public class Cart {
 
     public void clearCart() {
         this.cartItems.clear();
+        this.totalPrice = BigDecimal.ZERO;
     }
 
     public Map<Integer, CartItem> getCartItems() {
